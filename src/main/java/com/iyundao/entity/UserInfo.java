@@ -48,7 +48,7 @@ public class UserInfo extends BaseEntity<String> {
      * 科室
      */
     @Column(name = "DEPARTMENT",nullable = false,length = 50)
-    private String department;
+    private String departMent;
 
     /**
      * 出生日期
@@ -165,12 +165,12 @@ public class UserInfo extends BaseEntity<String> {
         this.sex = sex;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getDepartMent() {
+        return departMent;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setDepartMent(String departMent) {
+        this.departMent = departMent;
     }
 
     public String getBirthday() {

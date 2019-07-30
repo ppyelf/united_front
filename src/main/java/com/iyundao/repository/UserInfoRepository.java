@@ -32,7 +32,7 @@ public interface UserInfoRepository extends BaseRepository<UserInfo, String> {
      * @param department
      * @return
      */
-    @Query("select ui from UserInfo ui where ui.name like ?1 or ui.number like ?2 or ui.department like ?3")
+    @Query("select ui from UserInfo ui where ui.name like ?1 or ui.number like ?2 or ui.departMent like ?3")
     List<UserInfo> findByNameOrNumberOrDepartmentLike(String name, String number, String department);
 
     /**

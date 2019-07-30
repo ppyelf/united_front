@@ -23,6 +23,6 @@ public interface UserInfoFileRepository extends BaseRepository<UserInfoFile,Stri
      * @param userinfoid
      * @return
      */
-    @Query("select uif from UserInfoFile uif where uif.userinfoid=?1")
+    @Query("select uif from UserInfoFile uif where uif.userInfoId=?1")
     List<UserInfoFile> findByUserInfoFileUserid(String userinfoid);
 }

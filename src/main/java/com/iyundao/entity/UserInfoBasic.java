@@ -25,49 +25,49 @@ public class UserInfoBasic extends BaseEntity<String> {
      * 计算连续工龄时间
      */
     @Column(name = "WORKERDATE",length = 50)
-    private String workerdate;
+    private String workerDate;
 
     /**
      * 合同制转正时间
      */
     @Column(name = "ZHUANZHENGDATE",length = 50)
-    private String zhuanzhengdate;
+    private String zhuanzhengDate;
 
     /**
      * 工资关系转移时间
      */
     @Column(name = "WAGESDATE",length = 50)
-    private String wagesdate;
+    private String wagesDate;
 
     /**
      * 到院时间
      */
     @Column(name = "ARRIVEDATE",length = 50)
-    private String arrivedate;
+    private String arriveDate;
 
     /**
      * 职工性质
      */
     @Column(name = "WORKERSNATURE",length = 50)
-    private String workersnature;
+    private String workerSnature;
 
     /**
      * 职工类别
      */
     @Column(name = "WORKERSCATEGORY",length = 50)
-    private String workerscategory;
+    private String workerScategory;
 
     /**
      * 岗位类别
      */
     @Column(name = "POSTCATEGORY",length = 50)
-    private String postcategory;
+    private String postCategory;
 
     /**
      * 考勤组
      */
     @Column(name = "CHECKGROUP",length = 50)
-    private String checkgroup;
+    private String checkGroup;
 
     /**
      * 编制
@@ -79,13 +79,13 @@ public class UserInfoBasic extends BaseEntity<String> {
      * 增加方式
      */
     @Column(name = "INCREASEMODE",length = 50)
-    private String increasemode;
+    private String increaseMode;
 
     /**
      * 其他工号
      */
     @Column(name = "OTHERNUMBER",length = 50)
-    private String othernumber;
+    private String otherNumber;
 
     /**
      * 年龄
@@ -97,74 +97,74 @@ public class UserInfoBasic extends BaseEntity<String> {
      * 用户详情ID
      */
     @Column(name = "USERINFOID",nullable = false,length = 50)
-    private String userinfoid;
+    private String userInfoId;
 
     public static long getSerialVerisionUID() {
         return serialVerisionUID;
     }
 
-    public String getWorkerdate() {
-        return workerdate;
+    public String getWorkerDate() {
+        return workerDate;
     }
 
-    public void setWorkerdate(String workerdate) {
-        this.workerdate = workerdate;
+    public void setWorkerDate(String workerDate) {
+        this.workerDate = workerDate;
     }
 
-    public String getZhuanzhengdate() {
-        return zhuanzhengdate;
+    public String getZhuanzhengDate() {
+        return zhuanzhengDate;
     }
 
-    public void setZhuanzhengdate(String zhuanzhengdate) {
-        this.zhuanzhengdate = zhuanzhengdate;
+    public void setZhuanzhengDate(String zhuanzhengDate) {
+        this.zhuanzhengDate = zhuanzhengDate;
     }
 
-    public String getWagesdate() {
-        return wagesdate;
+    public String getWagesDate() {
+        return wagesDate;
     }
 
-    public void setWagesdate(String wagesdate) {
-        this.wagesdate = wagesdate;
+    public void setWagesDate(String wagesDate) {
+        this.wagesDate = wagesDate;
     }
 
-    public String getArrivedate() {
-        return arrivedate;
+    public String getArriveDate() {
+        return arriveDate;
     }
 
-    public void setArrivedate(String arrivedate) {
-        this.arrivedate = arrivedate;
+    public void setArriveDate(String arriveDate) {
+        this.arriveDate = arriveDate;
     }
 
-    public String getWorkersnature() {
-        return workersnature;
+    public String getWorkerSnature() {
+        return workerSnature;
     }
 
-    public void setWorkersnature(String workersnature) {
-        this.workersnature = workersnature;
+    public void setWorkerSnature(String workerSnature) {
+        this.workerSnature = workerSnature;
     }
 
-    public String getWorkerscategory() {
-        return workerscategory;
+    public String getWorkerScategory() {
+        return workerScategory;
     }
 
-    public void setWorkerscategory(String workerscategory) {
-        this.workerscategory = workerscategory;
+    public void setWorkerScategory(String workerScategory) {
+        this.workerScategory = workerScategory;
     }
 
-    public String getPostcategory() {
-        return postcategory;
+    public String getPostCategory() {
+        return postCategory;
     }
 
-    public void setPostcategory(String postcategory) {
-        this.postcategory = postcategory;
+    public void setPostCategory(String postCategory) {
+        this.postCategory = postCategory;
     }
 
-    public String getCheckgroup() {
-        return checkgroup;
+    public String getCheckGroup() {
+        return checkGroup;
     }
 
-    public void setCheckgroup(String checkgroup) {
-        this.checkgroup = checkgroup;
+    public void setCheckGroup(String checkGroup) {
+        this.checkGroup = checkGroup;
     }
 
     public String getOrganization() {
@@ -175,20 +175,20 @@ public class UserInfoBasic extends BaseEntity<String> {
         this.organization = organization;
     }
 
-    public String getIncreasemode() {
-        return increasemode;
+    public String getIncreaseMode() {
+        return increaseMode;
     }
 
-    public void setIncreasemode(String increasemode) {
-        this.increasemode = increasemode;
+    public void setIncreaseMode(String increaseMode) {
+        this.increaseMode = increaseMode;
     }
 
-    public String getOthernumber() {
-        return othernumber;
+    public String getOtherNumber() {
+        return otherNumber;
     }
 
-    public void setOthernumber(String othernumber) {
-        this.othernumber = othernumber;
+    public void setOtherNumber(String otherNumber) {
+        this.otherNumber = otherNumber;
     }
 
     public String getAge() {
@@ -199,12 +199,11 @@ public class UserInfoBasic extends BaseEntity<String> {
         this.age = age;
     }
 
-    public String getUserinfoid() {
-        return userinfoid;
+    public String getUserInfoId() {
+        return userInfoId;
     }
 
-    public void setUserinfoid(String userinfoid) {
-        this.userinfoid = userinfoid;
+    public void setUserInfoId(String userInfoId) {
+        this.userInfoId = userInfoId;
     }
-
 }

@@ -41,7 +41,7 @@ public class UserInfoFile extends BaseEntity<String> {
      * 用户详情ID
      */
     @Column(name = "USERINFOID",length = 50)
-    private String userinfoid;
+    private String userInfoId;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -71,12 +71,11 @@ public class UserInfoFile extends BaseEntity<String> {
         this.suffix = suffix;
     }
 
-    public String getUserinfoid() {
-        return userinfoid;
+    public String getUserInfoId() {
+        return userInfoId;
     }
 
-    public void setUserinfoid(String userinfoid) {
-        this.userinfoid = userinfoid;
+    public void setUserInfoId(String userInfoId) {
+        this.userInfoId = userInfoId;
     }
-
 }
