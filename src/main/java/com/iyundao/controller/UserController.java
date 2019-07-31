@@ -56,7 +56,7 @@ public class UserController extends BaseController {
     /**
      * @api {POST} /user/checkCode 检测code
      * @apiGroup User
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 检测编号是否存在
      * @apiParam {String} code
@@ -81,7 +81,7 @@ public class UserController extends BaseController {
     /**
      * @api {POST} /user/getIndustry 获取行业
      * @apiGroup User
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 获取行业(三级联动)
      * @apiParam {String} id 行业ID,选填,获取子行业时使用
@@ -118,7 +118,7 @@ public class UserController extends BaseController {
     /**
      * @api {POST} /user/checkAccount 检测账号
      * @apiGroup User
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 检测账号是否存在
      * @apiParam {String} code
@@ -144,7 +144,7 @@ public class UserController extends BaseController {
      * @api {POST} /user/search 用户搜索
      * @apiName search
      * @apiGroup User
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 用户搜索
      * @apiParam {String} key 搜索条件
@@ -186,7 +186,7 @@ public class UserController extends BaseController {
     /**
      * @api {POST} /user/add 新建用户
      * @apiGroup User
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 新建用户
      * @apiParam {String} account 账号 必填
@@ -257,7 +257,7 @@ public class UserController extends BaseController {
     /**
      * @api {POST} /user/view 查看用户
      * @apiGroup User
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 查看
      * @apiParam {String} id 用户ID
@@ -288,7 +288,7 @@ public class UserController extends BaseController {
     /**
      * @api {post} /user/groupUser 组织用户分页
      * @apiGroup User
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 组织用户分页
      * @apiParam {String} groupId 组织ID
@@ -324,7 +324,7 @@ public class UserController extends BaseController {
     /**
      * @api {post} /user/departUser 部门用户分页
      * @apiGroup User
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 部门用户分页
      * @apiParam {String} departId 部门ID
@@ -362,20 +362,19 @@ public class UserController extends BaseController {
 
 
     /**
-     * @api {POST} /user/addEducational 查看教育经历
+     * @api {POST} /user/addTrain 添加培训经历
      * @apiGroup User
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
-     * @apiDescription 查看个人教育经历
-     * @apiParam {String} name 学校名称,必填
+     * @apiDescription 添加个人的培训经历
+     * @apiParam {String} name 名称,必填
      * @apiParam {String} startTime 开始时间,必填
      * @apiParam {String} endTime 结束时间,必填
-     * @apiParam {String} major 所学专业,必填
-     * @apiParam {boolean} isUnified 是否统招,必填
-     * @apiParam {String} education 学历,必填
+     * @apiParam {String} honor 所获荣誉
+     * @apiParam {String} remark 描述
      * @apiParam {String} userId 用户ID,必填
      * @apiParamExample {json} 请求样例
-     *                /user/addEducational
+     *                /user/addTrain
      * @apiSuccess (200) {int} code 200:成功</br>
      *                              404:用户不存在</br>
      *                              601:必填字段不能为空</br>
@@ -383,12 +382,100 @@ public class UserController extends BaseController {
      * @apiSuccess (200) {String} message 信息
      * @apiSuccess (200) {String} data 返回用户信息
      * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"honor": "毕业","name": "教育培训","remark": "成就一生的学习","startTime": "20190731000000","id": "402881916c45ec9a016c45ed04b40000","endTime": "20190731000000"
+     *     }
+     * }
      */
+    @PostMapping("/addTrain")
+    public JsonResult addTrain(String name,
+                               String startTime,
+                               String endTime,
+                               String honor,
+                               String remark,
+                               String userId) {
+        if (isBlank(name, startTime, endTime, userId)) {
+            return JsonResult.blank();
+        }
+        if (isTimeFormat(startTime, endTime)) {
+            return JsonResult.errorTime();
+        }
+        User user = userService.findById(userId);
+        if (user == null) {
+            return JsonResult.notFound("用户不存在");
+        }
+        UserTrain ut = userService.saveUserTrain(name, startTime, endTime, honor, remark, user);
+        jsonResult.setData(JsonUtils.getJson(ut));
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/viewTrain 查看培训经历
+     * @apiGroup User
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 查看个人的培训经历
+     * @apiParam {String} id 培训经历ID
+     * @apiParamExample {json} 请求样例
+     *                /user/viewTrain?id=
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:培训经历不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"honor": "毕业","name": "教育培训","remark": "成就一生的学习","startTime": "20190731000000","id": "402881916c45ec9a016c45ed04b40000","endTime": "20190731000000"
+     *     }
+     * }
+     */
+    @PostMapping("/viewTrain")
+    public JsonResult viewTrain(String id) {
+        UserTrain train = userService.findUserTrainById(id);
+        if (train == null) {
+            return JsonResult.notFound("培训经历不存在");
+        }
+        jsonResult.setData(JsonUtils.getJson(train));
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/delTrain 删除培训经历
+     * @apiGroup User
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 删除个人培训经历
+     * @apiParam {String} id 培训经历ID
+     * @apiParamExample {json} 请求样例
+     *                /user/delTrain?id=
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:培训经历不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": []
+     * }
+     */
+    @PostMapping("/delTrain")
+    public JsonResult delTrain(String id) {
+        UserTrain train = userService.findUserTrainById(id);
+        if (train == null) {
+            return JsonResult.notFound("培训经历不存在");
+        }
+        userService.deleteUserTrain(train);
+        return JsonResult.success();
+    }
 
     /**
      * @api {POST} /user/sign 用户签到
      * @apiGroup User
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 查看
      * @apiParam {String} userId 用户ID

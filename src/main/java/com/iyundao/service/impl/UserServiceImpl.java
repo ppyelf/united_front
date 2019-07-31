@@ -30,6 +30,7 @@ import java.util.Set;
  * @Version: V2.0
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -49,6 +50,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private IndustryRepository industryRepository;
+
+    @Autowired
+    private UserTrainRepository userTrainRepository;
 
     @Override
     public User findByAccount(String account) {
@@ -213,5 +217,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Industry> findByFatherId(String id) {
         return industryRepository.findByFatherId(id);
+    }
+
+    @Override
+    public UserTrain saveUserTrain(String name, String startTime, String endTime, String honor, String remark, User user) {
+        UserTrain train = new UserTrain();
+        train.setCreatedDate(new Date());
+        train.setLastModifiedDate(new Date());
+        train.setStartTime(startTime);
+        train.setEndTime(endTime);
+        train.setHonor(honor);
+        train.setName(name);
+        train.setRemark(remark);
+        train.setUser(user);
+        train = userTrainRepository.save(train);
+        return train;
+    }
+
+    @Override
+    public UserTrain findUserTrainById(String id) {
+        return userTrainRepository.find(id);
+    }
+
+    @Override
+    public void deleteUserTrain(UserTrain train) {
+        userTrainRepository.delete(train);
     }
 }

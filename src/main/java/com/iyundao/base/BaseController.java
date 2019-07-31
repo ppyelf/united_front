@@ -140,7 +140,7 @@ public abstract class BaseController {
     protected boolean isTimeFormat(String... times) {
         boolean flag = false;
         for (String time : times) {
-            if (!TimeUtils.isyyyyMMddHHmmss(time)) {
+            if (isBlank(time) || !TimeUtils.isyyyyMMddHHmmss(time)) {
                 flag = true;
                 break;
             }

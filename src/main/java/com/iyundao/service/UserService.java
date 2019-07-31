@@ -121,4 +121,29 @@ public interface UserService {
      * @return
      */
     List<Industry> findByFatherId(String id);
+
+    /**
+     * 保存个人培训经历
+     * @param name
+     * @param startTime
+     * @param endTime
+     * @param honor
+     * @param remark
+     * @param user
+     * @return
+     */
+    UserTrain saveUserTrain(String name, String startTime, String endTime, String honor, String remark, User user);
+
+    /**
+     * 根据ID查询用户培训实体
+     * @param id
+     * @return
+     */
+    UserTrain findUserTrainById(String id);
+
+    /**
+     * 删除用户培训实体
+     * @param train
+     */
+    void deleteUserTrain(UserTrain train);
 }

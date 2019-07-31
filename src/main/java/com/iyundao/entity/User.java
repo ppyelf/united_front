@@ -98,6 +98,12 @@ public class User extends BaseEntity<String> {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserApp> userApps;
 
+    /**
+     * 培训经历
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<UserTrain> userTrains;
+
     public String getAccount() {
         return account;
     }
@@ -222,4 +228,11 @@ public class User extends BaseEntity<String> {
         this.code = code;
     }
 
+    public Set<UserTrain> getUserTrains() {
+        return userTrains;
+    }
+
+    public void setUserTrains(Set<UserTrain> userTrains) {
+        this.userTrains = userTrains;
+    }
 }

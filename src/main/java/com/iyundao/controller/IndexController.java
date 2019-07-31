@@ -60,7 +60,7 @@ public class IndexController extends BaseController {
     /**
      * @api {POST} /login 用户登录
      * @apiGroup 首页
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 用于用户登录
      * @apiParam {String} account 用户名
      * @apiParam {String} password 密码
@@ -103,7 +103,7 @@ public class IndexController extends BaseController {
     /**
      * @api {GET} /subjectList 个人机构列表
      * @apiGroup 首页
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 个人机构列表
      * @apiParam {String} id 用户ID
      * @apiParamExample {json} 请求样例：
@@ -147,7 +147,7 @@ public class IndexController extends BaseController {
     /**
      * @api {POST} /changeSubject 切换医院机构
      * @apiGroup 首页
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 切换医院机构
      * @apiParam {String} id 机构ID
      * @apiParamExample {json} 请求样例：
@@ -197,7 +197,7 @@ public class IndexController extends BaseController {
     /**
      * @api {POST} /logout 退出登录
      * @apiGroup Index
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 退出登录
      * @apiParamExample {json} 请求样例：
      * /out

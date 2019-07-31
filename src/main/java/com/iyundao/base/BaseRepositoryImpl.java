@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.support.CrudMethodMetadata;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -90,7 +91,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
 
     @Override
     @SuppressWarnings("unchecked")
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public <S extends T> S save(S s) {
         Assert.notNull(s);
         if (entityInformation.isNew(s)) {
@@ -103,6 +104,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
 
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void delete(T entity) {
         Assert.notNull(entity);
         em.remove(em.contains(entity) ? entity : em.merge(entity));
@@ -110,6 +112,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
 
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void deleteAll(Iterable<? extends T> entities) {
         Assert.notNull(entities);
         for (T entity : entities) {
@@ -118,6 +121,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void deleteAll() {
         List<T> result = findAll();
         for (T t : result) {
@@ -171,7 +175,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public <S extends T> List<S> saveAll(Iterable<S> entities) {
         Assert.notNull(entities);
         List<S> list = new ArrayList<>();
@@ -200,7 +204,6 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
         T t = find(id);
         return t == null ? false : true;
     }
-
 
     @Override
     public T find(ID id) {
@@ -469,7 +472,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public <S extends T> S saveAndFlush(S entity) {
         S s = save(entity);
         em.flush();

@@ -31,6 +31,7 @@ public interface AttendanceRepository extends BaseRepository<Attendance, String>
      * @param attendanceIds
      * @return
      */
+    @Override
     @Query("select a from Attendance a where a.id in (?1)")
     List<Attendance> findByIds(String[] attendanceIds);
 }

@@ -46,7 +46,7 @@ public class SubjectController extends BaseController {
     /**
      * @api {GET} /subject/list 机构列表
      * @apiGroup Subject
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 机构列表
      * @apiParamExample {json} 请求样例：
@@ -96,7 +96,7 @@ public class SubjectController extends BaseController {
      * @api {GET} /user_group/manager_list 列表
      * @apiGroup Subject
      * @apiHeader {String} IYunDao-AssessToken token验证
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 列表
      * @apiParamExample {json} 请求样例：
      *                /user_group/manager_list
@@ -155,7 +155,7 @@ public class SubjectController extends BaseController {
     /**
      * @api {post} /subject/view 查看机构
      * @apiGroup Subject
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 查看机构
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParam {String} id
@@ -199,7 +199,7 @@ public class SubjectController extends BaseController {
     /**
      * @api {POST} /subject/add 新增机构
      * @apiGroup Subject
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 新增机构
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParam {String} name
@@ -259,7 +259,7 @@ public class SubjectController extends BaseController {
     /**
      * @api {POST} /subject/modify 修改机构
      * @apiGroup Subject
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 修改机构
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParam {String} id
@@ -314,7 +314,7 @@ public class SubjectController extends BaseController {
     /**
      * @api {POST} /subject/checkCode 检测code
      * @apiGroup Subject
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 检测编号是否存在
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParam {String} code
@@ -340,7 +340,7 @@ public class SubjectController extends BaseController {
     /**
      * @api {post} /subject/distribution 分配
      * @apiGroup Subject
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 分配
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParam {String} id 必填,机构ID
