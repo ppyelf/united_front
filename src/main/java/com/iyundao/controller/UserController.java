@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 
@@ -75,6 +76,39 @@ public class UserController extends BaseController {
     @PostMapping("/checkCode")
     public JsonResult existCode(String code) {
         jsonResult.setData(userService.existsCode(code) ? "已存在" : "可以使用");
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/checkLabelCode 检测标签code
+     * @apiGroup User
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 检测标签编号是否存在
+     * @apiParam {String} code
+     * @apiParamExample {json} 请求样例：
+     *                ?checkLabelCode=123456
+     * @apiSuccess (200) {String} code 200:可以使用</br>
+     *                            code 400:已存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "已存在",
+     *     "data": []
+     * }
+     */
+    @PostMapping("/checkLabelCode")
+    public JsonResult checkLabelCode(String code) {
+        jsonResult = JsonResult.success();
+        if (userService.existsLabelCode(code)) {
+            jsonResult.setCode(400);
+            jsonResult.setMessage("已存在");
+        } else {
+            jsonResult.setCode(200);
+            jsonResult.setMessage("可以使用");
+        }
         return jsonResult;
     }
 
@@ -199,6 +233,7 @@ public class UserController extends BaseController {
      * @apiParam {String} password 密码 必填
      * @apiParam {String[]} roleIds 角色IDS 必填
      * @apiParam {String[]} permissionIds 权限IDS 必填
+     * @apiParam {String[]} labelIds 标签IDS
      * @apiParamExample {json} 请求样例：
      *                /user/add?key=张三&page=1&size=10
      * @apiSuccess (200) {int} code 200:成功</br>
@@ -230,7 +265,8 @@ public class UserController extends BaseController {
                           String remark,
                           String password,
                           String[] roleIds,
-                          String[] permissionIds) {
+                          String[] permissionIds,
+                          String[] labelIds) {
         if (StringUtils.isBlank(account)
                 || StringUtils.isBlank(name)
                 || StringUtils.isBlank(password)) {
@@ -249,9 +285,10 @@ public class UserController extends BaseController {
         List<Permission> permissions = permissionService.findByIds(permissionIds);
         if (CollectionUtils.isEmpty(roles) || CollectionUtils.isEmpty(permissions)) {
             return JsonResult.failure(605, "账号必须分配角色,权限");
-        } 
+        }
+        List<Label> labels = userService.findLabelByIds(labelIds);
         user.setRemark(remark);
-        return userService.save(user, subject, departId, groupsId, roles, permissions, jsonResult);
+        return userService.save(user, subject, departId, groupsId, roles, permissions, labels, jsonResult);
     }
 
     /**
@@ -585,6 +622,139 @@ public class UserController extends BaseController {
             return JsonResult.notFound("用户工作履历不存在");
         }
         userService.deleteUserWork(work);
+        return JsonResult.success();
+    }
+
+    /**
+     * @api {POST} /user/addLabel 添加标签
+     * @apiGroup User
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 添加标签
+     * @apiParam {String} name 名称,必填
+     * @apiParam {String} code 编号,必填
+     * @apiParam {String} remark 描述
+     * @apiParamExample {json} 请求样例
+     *                /user/addLabel?name=高知群体&code=123456&remark=告知群体
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              400:标签编号已存在</br>
+     *                              404:用户工作履历不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"code": "123456","name": "高知群体","remark": "告知群体","id": "402881916c471adc016c4721d2250000"
+     *     }
+     * }
+     */
+    @PostMapping("/addLabel")
+    public JsonResult addLabel(String name,
+                               String code,
+                               String remark) {
+        if (isBlank(name, code)) {
+            return JsonResult.blank();
+        }
+        if (userService.existsLabelCode(code)) {
+            return JsonResult.failure(400, "标签编号已存在");
+        }
+        Label label = userService.createLabel(name, code, remark);
+        jsonResult.setData(JsonUtils.getJson(label));
+        return jsonResult;
+    }
+
+    /**
+     * @api {GET} /user/labelList 标签列表
+     * @apiGroup User
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 添加标签
+     * @apiParamExample {json} 请求样例
+     *                /user/labelList
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:用户工作履历不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 400,
+     *     "message": "已存在",
+     *     "data": [{    "code": "123456",    "name": "高知群体",    "remark": "告知群体",    "id": "402881916c471adc016c4721d2250000"},{    "code": "12345",    "name": "老群团",    "remark": "老群团",    "id": "402881916c471adc016c472906340003"}
+     *     ]
+     * }
+     */
+    @GetMapping("/labelList")
+    public JsonResult labelList() {
+        List<Label> list = userService.findAllLabels();
+        JSONArray arr = new JSONArray();
+        for (Label l : list) {
+            JSONObject json = JsonUtils.getJson(l);
+            arr.add(json);
+        }
+        jsonResult.setData(arr);
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/delLabel 删除标签
+     * @apiGroup User
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 删除标签
+     * @apiParam {String} id 标签ID,必填
+     * @apiParamExample {json} 请求样例
+     *                /user/delLabel?id=402881916c471adc016c4721d2250000
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:标签不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": []
+     * }
+     */
+    @PostMapping("/delLabel")
+    public JsonResult delLabel(String id) {
+        Label label = userService.findLabelById(id);
+        if (label == null) {
+            return JsonResult.notFound("标签不存在");
+        }
+        userService.deleteLabel(label);
+        return JsonResult.success();
+    }
+
+    /**
+     * @api {POST} /user/delUserLabel 删除用户标签
+     * @apiGroup User
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 删除用户标签
+     * @apiParam {String} labelId 标签ID,必填
+     * @apiParam {String} userId 用户ID,必填
+     * @apiParamExample {json} 请求样例
+     *                /user/delUserLabel?id=402881916c471adc016c4721d2250000
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:用户标签不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": []
+     * }
+     */
+    @PostMapping("/delUserLabel")
+    public JsonResult delUserLabel(String labelId,
+                                   String userId) {
+        UserLabel userLabel = userService.findUserLabelByUserIdAndLabelId(userId, labelId);
+        if (userLabel == null) {
+            return JsonResult.notFound("用户标签不存在");
+        }
+        userService.delUserLabel(userLabel);
         return JsonResult.success();
     }
 

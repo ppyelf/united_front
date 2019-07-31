@@ -110,6 +110,12 @@ public class User extends BaseEntity<String> {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserWork> userWorks;
 
+    /**
+     * 个人标签
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<UserLabel> labels;
+
     public String getAccount() {
         return account;
     }
@@ -206,26 +212,6 @@ public class User extends BaseEntity<String> {
         this.group = group;
     }
 
-    /**
-     * 账号类型
-     */
-    public enum ACCOUNT_TYPE {
-        /**
-         * 正常
-         */
-        normal,
-
-        /**
-         * 禁用
-         */
-        disable,
-
-        /**
-         * 锁定
-         */
-        block
-    }
-
     public String getCode() {
         return code;
     }
@@ -248,5 +234,33 @@ public class User extends BaseEntity<String> {
 
     public void setUserWorks(Set<UserWork> userWorks) {
         this.userWorks = userWorks;
+    }
+
+    public Set<UserLabel> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(Set<UserLabel> labels) {
+        this.labels = labels;
+    }
+
+    /**
+     * 账号类型
+     */
+    public enum ACCOUNT_TYPE {
+        /**
+         * 正常
+         */
+        normal,
+
+        /**
+         * 禁用
+         */
+        disable,
+
+        /**
+         * 锁定
+         */
+        block
     }
 }

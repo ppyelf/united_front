@@ -58,8 +58,9 @@ public interface UserService {
      * 添加用户
      * @param user
      * @param permissions
+     * @param labels
      */
-    JsonResult save(User user, Subject subject, String departId, String groupsId, List<Role> roles, List<Permission> permissions, JsonResult jsonResult);
+    JsonResult save(User user, Subject subject, String departId, String groupsId, List<Role> roles, List<Permission> permissions, List<Label> labels, JsonResult jsonResult);
 
     /**
      * 获取用户详情的json
@@ -178,4 +179,60 @@ public interface UserService {
      * @param work
      */
     void deleteUserWork(UserWork work);
+
+    /**
+     * 查询标签编号是否存在
+     * @param code
+     * @return
+     */
+    boolean existsLabelCode(String code);
+
+    /**
+     * 添加标签
+     * @param name
+     * @param code
+     * @param remark
+     * @return
+     */
+    Label createLabel(String name, String code, String remark);
+
+    /**
+     * 获取所有标签的集合
+     * @return
+     */
+    List<Label> findAllLabels();
+
+    /**
+     * 根据id查询标签实体集合
+     * @param id
+     * @return
+     */
+    Label findLabelById(String id);
+
+    /**
+     * 删除标签实体
+     * @param label
+     */
+    void deleteLabel(Label label);
+
+    /**
+     * 根据IDS查询标签集合
+     * @param labelIds
+     * @return
+     */
+    List<Label> findLabelByIds(String[] labelIds);
+
+    /**
+     * 根据标签ID和用户ID查询用户标签
+     * @param userId
+     * @param labelId
+     * @return
+     */
+    UserLabel findUserLabelByUserIdAndLabelId(String userId, String labelId);
+
+    /**
+     * 删除用户标签
+     * @param userLabel
+     */
+    void delUserLabel(UserLabel userLabel);
 }

@@ -1,5 +1,6 @@
 package com.iyundao.base.shiro;
 
+import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.iyundao.base.utils.JsonResult;
@@ -21,11 +22,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import sun.applet.resources.MsgAppletViewer;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * @ClassName: JwtFilter
@@ -67,6 +71,14 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         HttpServletRequest req = (HttpServletRequest) request;
         String authorization = req.getHeader(SecurityConsts.IYUNDAO_ASSESS_TOKEN);
         return authorization != null;
+    }
+
+    /**
+     * 是否登录路径
+     */
+    protected boolean isLoginUrl(ServletRequest request) {
+        HttpServletRequest req = (HttpServletRequest) request;
+        return req.getRequestURI().startsWith(JwtUtils.LOGIN_URL);
     }
 
     /**
@@ -202,10 +214,12 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        if (isLoginUrl(request)) {
+            return true;
+        }
         if (isAppLogin(request)) {
             return executeAppLogin(request);
-        } 
-        if (isLoginAttempt(request, response)) {
+        } else if (isLoginAttempt(request, response)) {
             try {
                 this.executeLogin(request, response);
             } catch (Exception e) {
@@ -228,6 +242,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 this.response401(request, response, msg);
                 return false;
             }
+        }else {
+            this.response401(request, response, "缺少IYunDao-AssessToken,禁止访问");
+            return false;
         }
         return true;
     }
@@ -243,8 +260,18 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         httpServletResponse.setCharacterEncoding("UTF-8");
 
         JsonResult result = JsonResult.success();
-        result.setCode(200);
+        result.setCode(400);
         result.setMessage(msg);
+        try {
+            PrintWriter pw = resp.getWriter();
+            JSONObject json = new JSONObject();
+            json.put("code", result.getCode());
+            json.put("message", result.getMessage());
+            json.put("data", result.getData());
+            pw.write(json.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 }
