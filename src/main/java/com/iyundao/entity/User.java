@@ -69,12 +69,6 @@ public class User extends BaseEntity<String> {
     private String remark;
 
     /**
-     * 详情
-     */
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private UserInfo userInfo;
-
-    /**
      * 机构关系
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -98,13 +92,12 @@ public class User extends BaseEntity<String> {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Group> group;
 
-	 /**
-
+    /**
      * 第三方授权
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserApp> userApps;
-	
+
     public String getAccount() {
         return account;
     }
@@ -229,11 +222,4 @@ public class User extends BaseEntity<String> {
         this.code = code;
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
 }

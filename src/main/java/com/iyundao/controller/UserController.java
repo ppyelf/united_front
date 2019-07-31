@@ -1,6 +1,5 @@
 package com.iyundao.controller;
 
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.iyundao.base.BaseController;
@@ -20,10 +19,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -56,6 +52,7 @@ public class UserController extends BaseController {
 
     @Autowired
     private PermissionService permissionService;
+
     /**
      * @api {POST} /user/checkCode 检测code
      * @apiGroup User
@@ -78,6 +75,43 @@ public class UserController extends BaseController {
     @PostMapping("/checkCode")
     public JsonResult existCode(String code) {
         jsonResult.setData(userService.existsCode(code) ? "已存在" : "可以使用");
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/getIndustry 获取行业
+     * @apiGroup User
+     * @apiVersion 1.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 获取行业(三级联动)
+     * @apiParam {String} id 行业ID,选填,获取子行业时使用
+     * @apiParamExample {json} 请求样例：
+     *                ?id=c44802e6de624581a8452357fc644500
+     * @apiSuccess (200) {String} code 200:成功</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": [{    "code": "A02",    "name": "林业",    "id": "16866ade43d349708200e4983fa3f71b"},{    "code": "A03",    "name": "畜牧业",    "id": "6587acb48efd4bfc81bc75345378486e"},{    "code": "A05",    "name": "农、林、牧、渔服务业",    "id": "958166fe7ff34e1496d09d10f9af04a3"},{    "code": "A01",    "name": "农业",    "id": "a614a71f14e345b5b4007f36263c9aa0"},{    "code": "A04",    "name": "渔业",    "id": "d1d7469307a342bcb461bbe0716e8ba2"}
+     *     ]
+     * }
+     */
+    @GetMapping("/getIndustry")
+    public JsonResult getIndustry(String id) {
+        List<Industry> list = null;
+        if (StringUtils.isBlank(id)) {
+            list = userService.findByFatherIsNull();
+        } else {
+            list = userService.findByFatherId(id);
+        }
+        JSONArray arr = new JSONArray();
+        for (Industry industry : list) {
+            JSONObject json = JsonUtils.getJson(industry);
+            arr.add(json);
+        }
+        jsonResult.setData(arr);
         return jsonResult;
     }
 
@@ -325,6 +359,31 @@ public class UserController extends BaseController {
         jsonResult.setData(pageJson);
         return jsonResult;
     }
+
+
+    /**
+     * @api {POST} /user/addEducational 查看教育经历
+     * @apiGroup User
+     * @apiVersion 1.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 查看个人教育经历
+     * @apiParam {String} name 学校名称,必填
+     * @apiParam {String} startTime 开始时间,必填
+     * @apiParam {String} endTime 结束时间,必填
+     * @apiParam {String} major 所学专业,必填
+     * @apiParam {boolean} isUnified 是否统招,必填
+     * @apiParam {String} education 学历,必填
+     * @apiParam {String} userId 用户ID,必填
+     * @apiParamExample {json} 请求样例
+     *                /user/addEducational
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:用户不存在</br>
+     *                              601:必填字段不能为空</br>
+     *                              602:时间格式不正确,必须为:yyyyMMddHHmmss
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     */
 
     /**
      * @api {POST} /user/sign 用户签到

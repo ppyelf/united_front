@@ -90,6 +90,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
 
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(rollbackFor = Exception.class)
     public <S extends T> S save(S s) {
         Assert.notNull(s);
         if (entityInformation.isNew(s)) {
@@ -170,6 +171,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public <S extends T> List<S> saveAll(Iterable<S> entities) {
         Assert.notNull(entities);
         List<S> list = new ArrayList<>();
@@ -467,7 +469,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public <S extends T> S saveAndFlush(S entity) {
         S s = save(entity);
         em.flush();
@@ -475,11 +477,13 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteInBatch(Iterable<T> entities) {
 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteAllInBatch() {
 
     }

@@ -30,7 +30,6 @@ import java.util.Set;
  * @Version: V2.0
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -47,6 +46,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRelationRepository roleRelationRepository;
+
+    @Autowired
+    private IndustryRepository industryRepository;
 
     @Override
     public User findByAccount(String account) {
@@ -201,5 +203,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findBySubjectIdForPage(String id) {
         return userRepository.findBySubjectIdForPage(id);
+    }
+
+    @Override
+    public List<Industry> findByFatherIsNull() {
+        return industryRepository.findByFatherIsNull();
+    }
+
+    @Override
+    public List<Industry> findByFatherId(String id) {
+        return industryRepository.findByFatherId(id);
     }
 }

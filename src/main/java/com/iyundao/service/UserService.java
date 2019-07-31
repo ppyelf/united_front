@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.iyundao.base.Page;
 import com.iyundao.base.Pageable;
 import com.iyundao.base.utils.JsonResult;
-import com.iyundao.entity.Permission;
-import com.iyundao.entity.Role;
-import com.iyundao.entity.Subject;
-import com.iyundao.entity.User;
+import com.iyundao.entity.*;
 
 import java.util.List;
 
@@ -107,11 +104,21 @@ public interface UserService {
      */
     List<User> findbyIds(String[] userids);
 
-
-
-
     /**
      * 通过机构id获得所有的用户
      */
     List<User> findBySubjectIdForPage(String id);
+
+    /**
+     * 获取父类为空行业集合
+     * @return
+     */
+    List<Industry> findByFatherIsNull();
+
+    /**
+     * 根据父类ID获取集合
+     * @param id
+     * @return
+     */
+    List<Industry> findByFatherId(String id);
 }
