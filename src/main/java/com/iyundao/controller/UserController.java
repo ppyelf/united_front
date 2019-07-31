@@ -374,7 +374,7 @@ public class UserController extends BaseController {
      * @apiParam {String} remark 描述
      * @apiParam {String} userId 用户ID,必填
      * @apiParamExample {json} 请求样例
-     *                /user/addTrain
+     *                /user/addTrain?name=教育培训&startTime=20190731000000&endTime=20190731000000&honor=毕业&remark=成就一生的学习&userId=0a4179fc06cb49e3ac0db7bcc8cf0882
      * @apiSuccess (200) {int} code 200:成功</br>
      *                              404:用户不存在</br>
      *                              601:必填字段不能为空</br>
@@ -419,7 +419,7 @@ public class UserController extends BaseController {
      * @apiDescription 查看个人的培训经历
      * @apiParam {String} id 培训经历ID
      * @apiParamExample {json} 请求样例
-     *                /user/viewTrain?id=
+     *                /user/viewTrain?id=402881916c45f80a016c45f970160000
      * @apiSuccess (200) {int} code 200:成功</br>
      *                              404:培训经历不存在</br>
      * @apiSuccess (200) {String} message 信息
@@ -450,7 +450,7 @@ public class UserController extends BaseController {
      * @apiDescription 删除个人培训经历
      * @apiParam {String} id 培训经历ID
      * @apiParamExample {json} 请求样例
-     *                /user/delTrain?id=
+     *                /user/delTrain?id=402881916c45f80a016c45f970160000
      * @apiSuccess (200) {int} code 200:成功</br>
      *                              404:培训经历不存在</br>
      * @apiSuccess (200) {String} message 信息
@@ -469,6 +469,122 @@ public class UserController extends BaseController {
             return JsonResult.notFound("培训经历不存在");
         }
         userService.deleteUserTrain(train);
+        return JsonResult.success();
+    }
+
+    /**
+     * @api {POST} /user/addWork 添加工作履历
+     * @apiGroup User
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 添加个人工作履历
+     * @apiParam {String} companyName 单位名称,必填
+     * @apiParam {String} industryId 所属行业id,必填
+     * @apiParam {String} positionName 职位名称,必填
+     * @apiParam {String} startTime 开始时间,必填
+     * @apiParam {String} endTime 结束时间,必填
+     * @apiParam {String} userId 所属用户,必填
+     * @apiParamExample {json} 请求样例
+     *                /user/addWork?companyName=中国文学出版社&industryId=10f36b0bfc1a470daea50ee15c26af26&positionName=经理&startTime=20190731000000&endTime=20190731000000&userId=0a4179fc06cb49e3ac0db7bcc8cf0882
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:行业不存在</br>
+     *                              404:用户不存在</br>
+     *                              601:必填字段不能为空</br>
+     *                              602:时间格式不正确,必须为:yyyyMMddHHmmss
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"positionName": "经理","companyName": "中国文学出版社","startTime": "20190731000000","id": "402881916c46c2a1016c46c70c9a0000","endTime": "20190731000000"
+     *     }
+     * }
+     */
+    @PostMapping("/addWork")
+    public JsonResult addWork(String companyName,
+                              String industryId,
+                              String positionName,
+                              String startTime,
+                              String endTime,
+                              String userId) {
+        if (isBlank(companyName, industryId, positionName, startTime, endTime, userId)) {
+            return JsonResult.blank();
+        } 
+        if (isTimeFormat(startTime, endTime)) {
+            return JsonResult.errorTime();
+        }
+        Industry industry = userService.findIndustryById(industryId);
+        if (industry == null) {
+            return JsonResult.notFound("行业不存在");
+        }
+        User user = userService.findById(userId);
+        if (user == null) {
+            return JsonResult.notFound("用户不存在");
+        }
+        UserWork work = userService.saveUserWork(companyName, industry, positionName, startTime, endTime, user);
+        jsonResult.setData(JsonUtils.getJson(work));
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/viewWork 查看工作履历
+     * @apiGroup User
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 查看个人工作履历
+     * @apiParam {String} id 工作履历ID,必填
+     * @apiParamExample {json} 请求样例
+     *                /user/viewWork?id=402881916c46c2a1016c46c70c9a0000
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:用户工作履历不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"positionName": "经理","companyName": "中国文学出版社","startTime": "20190731000000","id": "402881916c46c2a1016c46c70c9a0000","endTime": "20190731000000"
+     *     }
+     * }
+     */
+    @PostMapping("/viewWork")
+    public JsonResult viewWork(String id) {
+        UserWork work = userService.findUserWorkById(id);
+        if (work == null) {
+            return JsonResult.notFound("用户工作履历不存在");
+        }
+        jsonResult.setData(JsonUtils.getJson(work));
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/delWork 删除工作履历
+     * @apiGroup User
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 删除个人工作履历
+     * @apiParam {String} id 工作履历ID,必填
+     * @apiParamExample {json} 请求样例
+     *                /user/delWork?id=402881916c45f80a016c45f970160000
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:用户工作履历不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": []
+     * }
+     */
+    @PostMapping("/delWork")
+    public JsonResult delWork(String id) {
+        UserWork work = userService.findUserWorkById(id);
+        if (work == null) {
+            return JsonResult.notFound("用户工作履历不存在");
+        }
+        userService.deleteUserWork(work);
         return JsonResult.success();
     }
 

@@ -146,4 +146,36 @@ public interface UserService {
      * @param train
      */
     void deleteUserTrain(UserTrain train);
+
+    /**
+     * 根据行业ID查询实体信息
+     * @param industryId
+     * @return
+     */
+    Industry findIndustryById(String industryId);
+
+    /**
+     * 保存用户工作履历
+     * @param companyName
+     * @param industry
+     * @param positionName
+     * @param startTime
+     * @param endTime
+     * @param user
+     * @return
+     */
+    UserWork saveUserWork(String companyName, Industry industry, String positionName, String startTime, String endTime, User user);
+
+    /**
+     * 根据ID查询用户工作履历
+     * @param id
+     * @return
+     */
+    UserWork findUserWorkById(String id);
+
+    /**
+     * 删除用户工作履历
+     * @param work
+     */
+    void deleteUserWork(UserWork work);
 }

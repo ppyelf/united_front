@@ -3,6 +3,7 @@ package com.iyundao.entity;
 import com.iyundao.base.BaseEntity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @ClassName: Industry
@@ -37,6 +38,12 @@ public class Industry extends BaseEntity<String> {
     @JoinColumn(name = "FATHERID")
     private Industry father;
 
+    /**
+     * 工作履历
+     */
+    @OneToMany(mappedBy = "industry", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    private Set<UserWork> userWorks;
+
     public String getCode() {
         return code;
     }
@@ -59,5 +66,13 @@ public class Industry extends BaseEntity<String> {
 
     public void setFather(Industry father) {
         this.father = father;
+    }
+
+    public Set<UserWork> getUserWorks() {
+        return userWorks;
+    }
+
+    public void setUserWorks(Set<UserWork> userWorks) {
+        this.userWorks = userWorks;
     }
 }

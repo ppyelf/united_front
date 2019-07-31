@@ -54,6 +54,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserTrainRepository userTrainRepository;
 
+    @Autowired
+    private UserWorkRepository userWorkRepository;
+
     @Override
     public User findByAccount(String account) {
         return userRepository.findByAccount(account);
@@ -242,5 +245,35 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserTrain(UserTrain train) {
         userTrainRepository.delete(train);
+    }
+
+    @Override
+    public Industry findIndustryById(String industryId) {
+        return industryRepository.find(industryId);
+    }
+
+    @Override
+    public UserWork saveUserWork(String companyName, Industry industry, String positionName, String startTime, String endTime, User user) {
+        UserWork work = new UserWork();
+        work.setCreatedDate(new Date());
+        work.setLastModifiedDate(new Date());
+        work.setCompanyName(companyName);
+        work.setStartTime(startTime);
+        work.setEndTime(endTime);
+        work.setIndustry(industry);
+        work.setPositionName(positionName);
+        work.setUser(user);
+        work = userWorkRepository.save(work);
+        return work;
+    }
+
+    @Override
+    public UserWork findUserWorkById(String id) {
+        return userWorkRepository.find(id);
+    }
+
+    @Override
+    public void deleteUserWork(UserWork work) {
+        userWorkRepository.delete(work);
     }
 }
