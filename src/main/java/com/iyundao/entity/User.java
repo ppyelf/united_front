@@ -99,12 +99,25 @@ public class User extends BaseEntity<String> {
     private Set<Group> group;
 
 	 /**
-
      * 第三方授权
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserApp> userApps;
-	
+
+    /**
+     * 讨论数据人
+     * @return
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<PoliticsDiscussData> politicsDiscussData;
+
+    /**
+     * 参政议政参与人
+     * @return
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<PoliticsUser> politicsUser;
+
     public String getAccount() {
         return account;
     }
@@ -199,6 +212,22 @@ public class User extends BaseEntity<String> {
 
     public void setGroup(Set<Group> group) {
         this.group = group;
+    }
+
+    public Set<PoliticsDiscussData> getPoliticsDiscussData() {
+        return politicsDiscussData;
+    }
+
+    public void setPoliticsDiscussData(Set<PoliticsDiscussData> politicsDiscussData) {
+        this.politicsDiscussData = politicsDiscussData;
+    }
+
+    public Set<PoliticsUser> getPoliticsUser() {
+        return politicsUser;
+    }
+
+    public void setPoliticsUser(Set<PoliticsUser> politicsUser) {
+        this.politicsUser = politicsUser;
     }
 
     /**
