@@ -22,7 +22,7 @@ public class PoliticsUser extends BaseEntity<String>{
      * 接收状态
      */
     @Enumerated(value = EnumType.ORDINAL)
-    @Column(name = "STATE")
+    @Column(name = "STATE",columnDefinition = "int default 0")
     private POLITICSUSER_TYPE state;
 
     /**

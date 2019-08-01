@@ -28,7 +28,7 @@ public class PoliticsIssueData  extends BaseEntity<String>{
     /**
      * 正文
      */
-    @Column(name = "CONTENT", length = 500)
+    @Column(name = "CONTENT", length = 5000)
     private String content;
 
     /**

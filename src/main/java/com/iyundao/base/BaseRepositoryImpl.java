@@ -480,9 +480,13 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     public void deleteInBatch(Iterable<T> entities) {
-
+        for (T entity : entities) {
+            delete(entity);
+            flush();
+            clear();
+        }
     }
 
     @Override

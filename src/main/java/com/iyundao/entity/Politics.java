@@ -26,10 +26,10 @@ public class Politics extends BaseEntity<String>{
     private String title;
 
     /**
-     * 简介
+     * 内容
      */
-    @Column(name = "SYNOPSIS", length = 50)
-    private String synopsis;
+    @Column(name = "CONTENT", length = 2000)
+    private String content;
 
     /**
      * 开始时间
@@ -53,19 +53,19 @@ public class Politics extends BaseEntity<String>{
     /**
      * 议题数据
      */
-    @OneToMany(mappedBy = "politics", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "politics", cascade ={CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
     private Set<PoliticsIssueData> politicsIssueData;
 
     /**
      * 讨论数据
      */
-    @OneToMany(mappedBy = "politics", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "politics", cascade ={CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
     private Set<PoliticsDiscussData> politicsDiscussData;
 
     /**
      * 决议数据
      */
-    @OneToMany(mappedBy = "politics", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "politics", cascade ={CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
     private Set<PoliticsResolutionData> politicsResolutionData;
 
     /**
@@ -90,12 +90,12 @@ public class Politics extends BaseEntity<String>{
         this.title = title;
     }
 
-    public String getSynopsis() {
-        return synopsis;
+    public String getContent() {
+        return content;
     }
 
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getStartTime() {
