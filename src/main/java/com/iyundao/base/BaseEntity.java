@@ -52,13 +52,13 @@ public abstract class BaseEntity<ID extends Serializable> implements Serializabl
      * 创建日期
      */
     @JsonIgnore
-    @Column(name = "CREATEDATE", nullable = false, updatable = false)
+    @Column(name = "CREATEDATE", nullable = false, updatable = false, length = 16)
     private String createdDate;
     /**
      * 最后修改日期
      */
     @JsonIgnore
-    @Column(name = "LASTMODIFIEDTIME", nullable = false)
+    @Column(name = "LASTMODIFIEDTIME", nullable = false, length = 16)
     private String lastModifiedDate;
     /**
      * ID
@@ -67,7 +67,7 @@ public abstract class BaseEntity<ID extends Serializable> implements Serializabl
     @GeneratedValue(generator = "jpa-uuid")
     @GenericGenerator(name = "jpa-uuid",
             strategy = "uuid")
-    @Column(name = "ID", length = 50)
+    @Column(name = "ID", length = 32)
     private ID id;
     /**
      * 版本

@@ -4,15 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.iyundao.base.shiro.JwtToken;
 import com.iyundao.base.shiro.SecurityConsts;
-import com.iyundao.base.utils.EncryptUtils;
-import com.iyundao.base.utils.JsonResult;
-import com.iyundao.base.utils.JsonUtils;
-import com.iyundao.base.utils.JwtUtils;
+import com.iyundao.base.utils.*;
 import com.iyundao.entity.User;
 import com.iyundao.entity.UserRelation;
 import com.iyundao.service.UserRelationService;
 import com.iyundao.service.UserService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -23,6 +21,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.FacesRequestAttributes;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -120,57 +119,35 @@ public abstract class BaseController {
     private UserRelationService userRelationService;
 
     /**
-     * 数据验证
-     *
-     * @param target 验证对象
-     * @param groups 验证组
-     * @return 验证结果
+     * 验证字符串是否为空
      */
-    protected boolean isValid(Object target, Class<?>... groups) {
-        Set<ConstraintViolation<Object>> constraintViolations = validator.validate(target, groups);
-        if (constraintViolations.isEmpty()) {
-            return true;
-        }
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        requestAttributes.setAttribute(CONSTRAINT_VIOLATIONS_ATTRIBUTE_NAME, constraintViolations, RequestAttributes.SCOPE_REQUEST);
-        return false;
-    }
-
-    /**
-     * 数据验证
-     *
-     * @param targets 验证对象
-     * @param groups  验证组
-     * @return 验证结果
-     */
-    protected boolean isValid(Collection<Object> targets, Class<?>... groups) {
-        for (Object target : targets) {
-            if (!isValid(target, groups)) {
-                return false;
+    protected boolean isBlank(String... args) {
+        boolean flag = false;
+        for (String arg : args) {
+            if (StringUtils.isBlank(arg)) {
+                flag = true;
+                break;
             }
         }
-        return true;
+        return flag;
     }
 
     /**
-     * 数据验证
-     *
-     * @param type     类型
-     * @param property 属性
-     * @param value    值
-     * @param groups   验证组
-     * @return 验证结果
+     * 验证时间格式是否正确
+     * @param times
+     * @return
      */
-    protected boolean isValid(Class<?> type, String property, Object value, Class<?>... groups) {
-        Set<?> constraintViolations = validator.validateValue(type, property, value, groups);
-        if (constraintViolations.isEmpty()) {
-            return true;
+    protected boolean isTimeFormat(String... times) {
+        boolean flag = false;
+        for (String time : times) {
+            if (isBlank(time) || !TimeUtils.isyyyyMMddHHmmss(time)) {
+                flag = true;
+                break;
+            }
         }
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        requestAttributes.setAttribute(CONSTRAINT_VIOLATIONS_ATTRIBUTE_NAME, constraintViolations, RequestAttributes.SCOPE_REQUEST);
-        return false;
+        return flag;
     }
-    
+
     public JsonResult login(Subject subject, JwtToken token) {
         // 执行认证登陆
         try {

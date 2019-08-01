@@ -50,7 +50,7 @@ public class DepartController extends BaseController {
      * @api {POST} /depart/list 机构部门列表
      * @apiName list
      * @apiGroup Depart
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 部门列表
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParam {int} type 是否只选择父级部门(默认:0-不选择)
@@ -90,7 +90,7 @@ public class DepartController extends BaseController {
     /**
      * @api {get} /depart/manager_list 部门管理列表
      * @apiGroup Depart
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 部门管理列表
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParamExample {json} 请求样例：
@@ -122,7 +122,7 @@ public class DepartController extends BaseController {
     /**
      * @api {post} /depart/view 查看部门信息
      * @apiGroup Depart
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 查看部门信息
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParam {String} id
@@ -164,7 +164,7 @@ public class DepartController extends BaseController {
     /**
      * @api {post} /depart/add 新增部门
      * @apiGroup Depart
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 新增部门
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParam {String} name
@@ -219,7 +219,7 @@ public class DepartController extends BaseController {
     /**
      * @api {post} /depart/modify 修改部门信息
      * @apiGroup Depart
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 修改部门信息
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParam {String} id
@@ -277,7 +277,7 @@ public class DepartController extends BaseController {
     /**
      * @api {post} /depart/childs 获取子集部门
      * @apiGroup Depart
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 获取子集部门
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParam {String} id
@@ -309,7 +309,7 @@ public class DepartController extends BaseController {
     /**
      * @api {post} /depart/all 获取所有部门
      * @apiGroup Depart
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 获取所有部门
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParamExample {json} 请求样例：
@@ -340,7 +340,7 @@ public class DepartController extends BaseController {
     /**
      * @api {POST} /subject/checkCode 检测code
      * @apiGroup Subject
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiDescription 检测编号是否存在
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiParam {String} code

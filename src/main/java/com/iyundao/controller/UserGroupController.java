@@ -39,7 +39,7 @@ public class UserGroupController extends BaseController {
     /**
      * @api {get} /user_group/list 列表
      * @apiGroup UserGroup
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 列表
      * @apiParamExample {json} 请求样例：
@@ -69,7 +69,7 @@ public class UserGroupController extends BaseController {
     /**
      * @api {post} /user_group/view 查看单个用户组
      * @apiGroup UserGroup
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 查看单个用户组
      * @apiParam {String} id
@@ -109,7 +109,7 @@ public class UserGroupController extends BaseController {
     /**
      * @api {post} /user_group/add 新增个人用户组
      * @apiGroup UserGroup
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 查看单个用户组
      * @apiParam {String} name
@@ -157,7 +157,7 @@ public class UserGroupController extends BaseController {
     /**
      * @api {post} /user_group/modify 修改个人用户组
      * @apiGroup UserGroup
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 修改个人用户组
      * @apiParam {String} id
@@ -211,7 +211,7 @@ public class UserGroupController extends BaseController {
     /**
      * @api {post} /user_group/child 查看单个用户组
      * @apiGroup UserGroup
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 查看单个用户组
      * @apiParam {String} id

@@ -2,6 +2,7 @@ package com.iyundao.base.utils;
 
 
 import com.alibaba.fastjson.JSONArray;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 import java.io.Serializable;
 
@@ -13,8 +14,12 @@ public class JsonResult implements Serializable {
 	public static final int CODE_SUCCESS = 200;
 	public static final int CODE_FAILURED = -1;
 	public static final int CODE_PARAM = 600;
+	public static final int CODE_BLANK = 601;
+	public static final int CODE_TIME_FORMAT = 602;
 	public static final int CODE_NOT_FOUND = 404;
     public static final String MESSAGE_PARAM = "参数异常";
+    public static final String MESSAGE_BLANK = "必填参数不能为空";
+    public static final String MESSAGE_TIME_FORMAT = "时间格式不正确,必须为:yyyyMMddHHmmss";
 	private static final long serialVersionUID = -1491499610244557029L;
 	public static String[] NOOP = new String[] {};
 	private int code;
@@ -103,14 +108,33 @@ public class JsonResult implements Serializable {
     }
 
 	/**
-	 * 处理失败 -- 查询不存在
-	 *
+	 * 处理失败
+	 * code: 404
+     * message: 自定义消息
 	 * @return data
 	 */
 	public static final JsonResult notFound(String message) {
         return new JsonResult(CODE_NOT_FOUND, message, NOOP);
 	}
 
+    /**
+     * 处理失败
+     * code: 601
+     * message: 必填参数不能为空
+     * @return
+     */
+	public static final JsonResult blank() {
+        return new JsonResult(CODE_BLANK, MESSAGE_BLANK, NOOP);
+	}
+
+    /**
+     * 处理失败
+     * code: 602
+     * message: 时间格式不正确,必须为:yyyyMMddHHmmss
+     */
+    public static final JsonResult errorTime() {
+        return new JsonResult(CODE_TIME_FORMAT, MESSAGE_TIME_FORMAT, NOOP);
+    }
 	/**
 	 * 处理失败
 	 * 

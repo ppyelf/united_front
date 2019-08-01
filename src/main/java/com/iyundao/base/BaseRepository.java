@@ -40,10 +40,17 @@ public interface BaseRepository<T, ID> extends JpaRepositoryImplementation<T, ID
     @Override
     <S extends T> S saveAndFlush(S entity);
 
+    @Override
     void delete(T s);
 
+    @Override
     void deleteAll(Iterable<? extends T> entities);
 
+    /**
+     * 统计
+     * @return
+     */
+    @Override
     long count();
 
     boolean exists(ID id);

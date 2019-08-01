@@ -25,6 +25,7 @@ public interface ActivityRepository extends BaseRepository<Activity, String> {
      * @param id
      * @return
      */
+    @Override
     @Query("select a from Activity a where a.id = ?1")
     Activity find(String id);
 

@@ -69,12 +69,6 @@ public class User extends BaseEntity<String> {
     private String remark;
 
     /**
-     * 详情
-     */
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private UserInfo userInfo;
-
-    /**
      * 机构关系
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -98,25 +92,29 @@ public class User extends BaseEntity<String> {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Group> group;
 
-	 /**
+    /**
      * 第三方授权
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserApp> userApps;
 
     /**
-     * 讨论数据人
-     * @return
+     * 培训经历
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<PoliticsDiscussData> politicsDiscussData;
+    private Set<UserTrain> userTrains;
 
     /**
-     * 参政议政参与人
-     * @return
+     * 工作履历
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<PoliticsUser> politicsUser;
+    private Set<UserWork> userWorks;
+
+    /**
+     * 个人标签
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<UserLabel> labels;
 
     public String getAccount() {
         return account;
@@ -214,20 +212,36 @@ public class User extends BaseEntity<String> {
         this.group = group;
     }
 
-    public Set<PoliticsDiscussData> getPoliticsDiscussData() {
-        return politicsDiscussData;
+    public String getCode() {
+        return code;
     }
 
-    public void setPoliticsDiscussData(Set<PoliticsDiscussData> politicsDiscussData) {
-        this.politicsDiscussData = politicsDiscussData;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public Set<PoliticsUser> getPoliticsUser() {
-        return politicsUser;
+    public Set<UserTrain> getUserTrains() {
+        return userTrains;
     }
 
-    public void setPoliticsUser(Set<PoliticsUser> politicsUser) {
-        this.politicsUser = politicsUser;
+    public void setUserTrains(Set<UserTrain> userTrains) {
+        this.userTrains = userTrains;
+    }
+
+    public Set<UserWork> getUserWorks() {
+        return userWorks;
+    }
+
+    public void setUserWorks(Set<UserWork> userWorks) {
+        this.userWorks = userWorks;
+    }
+
+    public Set<UserLabel> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(Set<UserLabel> labels) {
+        this.labels = labels;
     }
 
     /**
@@ -248,21 +262,5 @@ public class User extends BaseEntity<String> {
          * 锁定
          */
         block
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public UserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
     }
 }

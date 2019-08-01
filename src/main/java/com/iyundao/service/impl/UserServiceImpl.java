@@ -48,6 +48,21 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleRelationRepository roleRelationRepository;
 
+    @Autowired
+    private IndustryRepository industryRepository;
+
+    @Autowired
+    private UserTrainRepository userTrainRepository;
+
+    @Autowired
+    private UserWorkRepository userWorkRepository;
+
+    @Autowired
+    private LabelRepository labelRepository;
+
+    @Autowired
+    private UserLabelRepository userLabelRepository;
+
     @Override
     public User findByAccount(String account) {
         return userRepository.findByAccount(account);
@@ -75,7 +90,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JsonResult save(User user, Subject subject, String departId, String groupsId, List<Role> roles, List<Permission> permissions, JsonResult jsonResult) {
+    public JsonResult save(User user, Subject subject, String departId, String groupsId, List<Role> roles, List<Permission> permissions, List<Label> labels, JsonResult jsonResult) {
         if (StringUtils.isBlank(departId)
                     || StringUtils.isBlank(groupsId)) {
             JsonResult.failure(601, "用户必须有所属的机构/部门/组织");
@@ -116,6 +131,18 @@ public class UserServiceImpl implements UserService {
         Set<UserRelation> userRelations = new HashSet<>();
         userRelations.add(userRelation);
         user.setUserRelations(userRelations);
+        //设置用户标签
+        Set<UserLabel> userLabels = new HashSet<>();
+        for (Label l : labels) {
+            UserLabel userLabel = new UserLabel();
+            userLabel.setCreatedDate(new Date());
+            userLabel.setLastModifiedDate(new Date());
+            userLabel.setUser(user);
+            userLabel.setLabel(l);
+            userLabel = userLabelRepository.save(userLabel);
+            userLabels.add(userLabel);
+        }
+        user.setLabels(userLabels);
         user = userRepository.save(user);
         jsonResult.setData(getUserInfoJson(user));
         return jsonResult;
@@ -201,5 +228,118 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findBySubjectIdForPage(String id) {
         return userRepository.findBySubjectIdForPage(id);
+    }
+
+    @Override
+    public List<Industry> findByFatherIsNull() {
+        return industryRepository.findByFatherIsNull();
+    }
+
+    @Override
+    public List<Industry> findByFatherId(String id) {
+        return industryRepository.findByFatherId(id);
+    }
+
+    @Override
+    public UserTrain saveUserTrain(String name, String startTime, String endTime, String honor, String remark, User user) {
+        UserTrain train = new UserTrain();
+        train.setCreatedDate(new Date());
+        train.setLastModifiedDate(new Date());
+        train.setStartTime(startTime);
+        train.setEndTime(endTime);
+        train.setHonor(honor);
+        train.setName(name);
+        train.setRemark(remark);
+        train.setUser(user);
+        train = userTrainRepository.save(train);
+        return train;
+    }
+
+    @Override
+    public UserTrain findUserTrainById(String id) {
+        return userTrainRepository.find(id);
+    }
+
+    @Override
+    public void deleteUserTrain(UserTrain train) {
+        userTrainRepository.delete(train);
+    }
+
+    @Override
+    public Industry findIndustryById(String industryId) {
+        return industryRepository.find(industryId);
+    }
+
+    @Override
+    public UserWork saveUserWork(String companyName, Industry industry, String positionName, String startTime, String endTime, User user) {
+        UserWork work = new UserWork();
+        work.setCreatedDate(new Date());
+        work.setLastModifiedDate(new Date());
+        work.setCompanyName(companyName);
+        work.setStartTime(startTime);
+        work.setEndTime(endTime);
+        work.setIndustry(industry);
+        work.setPositionName(positionName);
+        work.setUser(user);
+        work = userWorkRepository.save(work);
+        return work;
+    }
+
+    @Override
+    public UserWork findUserWorkById(String id) {
+        return userWorkRepository.find(id);
+    }
+
+    @Override
+    public void deleteUserWork(UserWork work) {
+        userWorkRepository.delete(work);
+    }
+
+    @Override
+    public boolean existsLabelCode(String code) {
+        Label label = labelRepository.findByCode(code);
+        return label == null ? false : true;
+    }
+
+    @Override
+    public Label createLabel(String name, String code, String remark) {
+        Label label = new Label();
+        label.setCreatedDate(new Date());
+        label.setLastModifiedDate(new Date());
+        label.setName(name);
+        label.setCode(code);
+        label.setRemark(remark);
+        label = labelRepository.save(label);
+        return label;
+    }
+
+    @Override
+    public List<Label> findAllLabels() {
+        return labelRepository.findAll();
+    }
+
+    @Override
+    public Label findLabelById(String id) {
+        return labelRepository.find(id);
+    }
+
+    @Override
+    public void deleteLabel(Label label) {
+        labelRepository.delete(label);
+    }
+
+    @Override
+    public List<Label> findLabelByIds(String[] labelIds) {
+        return labelRepository.findByIds(labelIds);
+    }
+
+    @Override
+    public UserLabel findUserLabelByUserIdAndLabelId(String userId, String labelId) {
+        return userLabelRepository.findUserLabelByUserIdAndLabelId(userId, labelId);
+    }
+
+    @Override
+    public void delUserLabel(UserLabel userLabel) {
+        userLabelRepository.delete(userLabel);
     }
 }

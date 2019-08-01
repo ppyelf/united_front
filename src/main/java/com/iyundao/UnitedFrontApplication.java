@@ -16,9 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 })
 @EnableJpaRepositories(repositoryBaseClass = BaseRepositoryImpl.class)
 public class UnitedFrontApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(UnitedFrontApplication.class, args);
     }
-
 }

@@ -56,7 +56,7 @@ public class ActivityController extends BaseController {
     /**
      * @api {POST} /activity/upload_file 上传文件
      * @apiGroup Activity
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 上传文件
      * @apiParam {String} name 必填
@@ -115,7 +115,7 @@ public class ActivityController extends BaseController {
     /**
      * @api {POST} /activity/del_file 活动文件删除
      * @apiGroup Activity
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 活动文件删除
      * @apiParam {String[]} ids 必填
@@ -146,7 +146,7 @@ public class ActivityController extends BaseController {
     /**
      * @api {POST} /activity/upload_image 上传图片
      * @apiGroup Activity
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 上传图片
      * @apiParam {String} name 必填
@@ -188,7 +188,7 @@ public class ActivityController extends BaseController {
     /**
      * @api {POST} /activity/del_image 活动图片删除
      * @apiGroup Activity
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 活动图片删除
      * @apiParam {String[]} ids 必填
@@ -218,7 +218,7 @@ public class ActivityController extends BaseController {
     /**
      * @api {POST} /activity/add_time 添加出勤类型
      * @apiGroup Activity
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 添加出勤类型
      * @apiParam {String} startTime 必填
@@ -265,7 +265,7 @@ public class ActivityController extends BaseController {
     /**
      * @api {POST} /activity/add 新增
      * @apiGroup Activity
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 新增
      * @apiParam {String} name 必填
@@ -337,7 +337,7 @@ public class ActivityController extends BaseController {
     /**
      * @api {POST} /activity/del 删除
      * @apiGroup Activity
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 删除
      * @apiParam {String} id 必填
@@ -368,7 +368,7 @@ public class ActivityController extends BaseController {
     /**
      * @api {POST} /activity/modify 修改
      * @apiGroup Activity
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 修改
      * @apiParam {String} id 必填
@@ -443,7 +443,7 @@ public class ActivityController extends BaseController {
     /**
      * @api {GET} /activity/list 列表
      * @apiGroup Activity
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 列表
      * @apiParamExample {json} 请求样例:
@@ -473,7 +473,7 @@ public class ActivityController extends BaseController {
     /**
      * @api {POST} /activity/view 查看
      * @apiGroup Activity
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 查看
      * @apiParam {String} id 必填
@@ -505,7 +505,7 @@ public class ActivityController extends BaseController {
     /**
      * @api {POST} /activity/page 分页
      * @apiGroup Activity
-     * @apiVersion 1.0.0
+     * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 分页
      * @apiParamExample {json} 请求示例:
@@ -536,7 +536,7 @@ public class ActivityController extends BaseController {
     /**
     * @api {POST} /activity/searchname 模糊查询活动名称
     * @apiGroup Activity
-    * @apiVersion 1.0.0
+    * @apiVersion 2.0.0
     * @apiDescription 查看
     * @apiParam {String} name 模糊查询名称必填
     * @apiParam {int} page  跳过的页数

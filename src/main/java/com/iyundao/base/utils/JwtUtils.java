@@ -46,6 +46,8 @@ public class JwtUtils {
 
     public static final String WX_START_URL = "/wx";
 
+    public static final String LOGIN_URL = "/login";
+
     public enum LOGIN_TYPE{
         /**
          * app
