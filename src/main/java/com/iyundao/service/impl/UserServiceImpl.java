@@ -63,6 +63,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserLabelRepository userLabelRepository;
 
+    @Autowired
+    private UserInfoRepository userInfoRepository;
+
     @Override
     public User findByAccount(String account) {
         return userRepository.findByAccount(account);
@@ -341,5 +344,46 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delUserLabel(UserLabel userLabel) {
         userLabelRepository.delete(userLabel);
+    }
+
+    @Override
+    public UserInfo saveUserInfo(User user, String name, String nation, int age, String political, String nativePlace, String university, String major, String education, String birthDay, String address, long tel, String email, String wx, String qq, String iCard, String selfEvaluation) {
+        UserInfo info = new UserInfo();
+        info.setCreatedDate(new Date());
+        info.setLastModifiedDate(new Date());
+        info.setUser(user);
+        return saveUserInfo(info, name, nation, age, political, nativePlace, university, major, education, birthDay, address, tel, email, wx, qq, iCard, selfEvaluation);
+    }
+
+    @Override
+    public UserInfo findUserInfoById(String id) {
+        return userInfoRepository.find(id);
+    }
+
+    @Override
+    public UserInfo modifyUserInfo(UserInfo userInfo, String name, String nation, int age, String political, String nativePlace, String university, String major, String education, String birthDay, String address, long tel, String email, String wx, String qq, String iCard, String selfEvaluation) {
+        userInfo.setLastModifiedDate(new Date());
+        return saveUserInfo(userInfo, name, nation, age, political, nativePlace, university, major, education, birthDay, address, tel, email, wx, qq, iCard, selfEvaluation);
+    }
+
+    private UserInfo saveUserInfo(UserInfo userInfo, String name, String nation, int age, String political, String nativePlace, String university, String major, String education, String birthDay, String address, long tel, String email, String wx, String qq, String iCard, String selfEvaluation) {
+        userInfo.setName(name);
+        userInfo.setNation(nation);
+        userInfo.setAddress(address);
+        userInfo.setAge(age);
+        userInfo.setPolitical(political);
+        userInfo.setNativePlace(nativePlace);
+        userInfo.setUniversity(university);
+        userInfo.setMajor(major);
+        userInfo.setEducation(education);
+        userInfo.setBirthDay(birthDay);
+        userInfo.setTel(tel);
+        userInfo.setEmail(email);
+        userInfo.setWx(wx);
+        userInfo.setQq(qq);
+        userInfo.setiCard(iCard);
+        userInfo.setSelfEvaluation(selfEvaluation);
+        userInfo = userInfoRepository.save(userInfo);
+        return userInfo;
     }
 }

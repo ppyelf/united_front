@@ -235,4 +235,57 @@ public interface UserService {
      * @param userLabel
      */
     void delUserLabel(UserLabel userLabel);
+
+    /**
+     * 添加用户详情
+     * @param user
+     * @param name
+     * @param nation
+     * @param age
+     * @param political
+     * @param nativePlace
+     * @param university
+     * @param major
+     * @param education
+     * @param birthDay
+     * @param address
+     * @param tel
+     * @param email
+     * @param wx
+     * @param qq
+     * @param iCard
+     * @param selfEvaluation
+     * @return
+     */
+    UserInfo saveUserInfo(User user, String name, String nation, int age, String political, String nativePlace, String university, String major, String education, String birthDay, String address, long tel, String email, String wx, String qq, String iCard, String selfEvaluation);
+
+    /**
+     * 根据ID查询用户详情
+     * @param id
+     * @return
+     */
+    UserInfo findUserInfoById(String id);
+
+    /**
+     * 修改用户详情
+     * @param userInfo
+     * @param name
+     * @param nation
+     * @param age
+     * @param political
+     * @param nativePlace
+     * @param university
+     * @param major
+     * @param education
+     * @param birthDay
+     * @param address
+     * @param tel
+     * @param email
+     * @param wx
+     * @param qq
+     * @param iCard
+     * @param selfEvaluation
+     * @return
+     */
+    UserInfo modifyUserInfo(UserInfo userInfo, String name, String nation, int age, String political, String nativePlace, String university, String major, String education, String birthDay, String address, long tel, String email, String wx, String qq, String iCard, String selfEvaluation);
 }

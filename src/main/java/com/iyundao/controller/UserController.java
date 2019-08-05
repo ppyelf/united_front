@@ -323,6 +323,146 @@ public class UserController extends BaseController {
     }
 
     /**
+     * @api {POST} /user/addUserInfo 添加用户详情
+     * @apiGroup User
+     * @apiVersion 1.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 添加用户详情,必须在建立个人账号认账之后进行
+     * @apiParam {String} userId 用户ID, 必填
+     * @apiParam {String} name 真实姓名
+     * @apiParam {String} nation 民族
+     * @apiParam {int} age 年龄
+     * @apiParam {String} political 政治面貌
+     * @apiParam {String} nativePlace 籍贯
+     * @apiParam {String} university 毕业院校
+     * @apiParam {String} major 专业
+     * @apiParam {String} education 学历
+     * @apiParam {String} birthDay 出生日期
+     * @apiParam {String} address 地址
+     * @apiParam {long} tel 电话
+     * @apiParam {String} email 邮箱
+     * @apiParam {String} wx 微信
+     * @apiParam {String} qq QQ
+     * @apiParam {String} iCard 身份证号
+     * @apiParam {String} selfEvaluation 自我评价
+     * @apiParamExample {json} 请求样例：
+     *                /user/addUserInfo?userId=0a4179fc06cb49e3ac0db7bcc8cf0882&name=张三&nation=汉族&age=18&political=党员&nativePlace=北京北京&university=北京大学&major=计算机科学与技术&education=博士&birthDay=20190801&address=北京海淀&tel=13839724066&email=11@qq.com&wx=test&qq=13839724&iCard=411526198701191036&selfEvaluation=幽默
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                                 404:用户不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"qq": "13839724","wx": "test","birthDay": "20190801","address": "北京海淀","education": "博士","nation": "汉族","university": "北京大学","political": "党员","selfEvaluation": "幽默","major": "计算机科学与技术","name": "张三","nativePlace": "北京北京","tel": "13839724066","id": "402881916c4b283e016c4b34632e0001","iCard": "","email": "11@qq.com","age": "18"
+     *     }
+     * }
+     */
+    @PostMapping("/addUserInfo")
+    public JsonResult addUserInfo(String userId,
+                                  String name,
+                                  String nation,
+                                  @RequestParam(defaultValue = "0") int age,
+                                  String political,
+                                  String nativePlace,
+                                  String university,
+                                  String major,
+                                  String education,
+                                  String birthDay,
+                                  String address,
+                                  @RequestParam(defaultValue = "0L") long tel,
+                                  String email,
+                                  String wx,
+                                  String qq,
+                                  String iCard,
+                                  String selfEvaluation) {
+        if (isBlank(userId)) {
+            return JsonResult.blank();
+        }
+        User user = userService.findById(userId);
+        if (user == null) {
+            return JsonResult.notFound("用户不存在");
+        }
+        UserInfo userInfo = userService.saveUserInfo(user, name, nation, age,
+                political, nativePlace, university, major,
+                education, birthDay, address, tel,
+                email, wx, qq, iCard, selfEvaluation);
+        jsonResult.setData(JsonUtils.getJson(userInfo));
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/modifyUserInfo 修改用户详情
+     * @apiGroup User
+     * @apiVersion 1.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 修改用户详情
+     * @apiParam {String} id 用户详情ID, 必填
+     * @apiParam {String} name 真实姓名
+     * @apiParam {String} nation 民族
+     * @apiParam {int} age 年龄
+     * @apiParam {String} political 政治面貌
+     * @apiParam {String} nativePlace 籍贯
+     * @apiParam {String} university 毕业院校
+     * @apiParam {String} major 专业
+     * @apiParam {String} education 学历
+     * @apiParam {String} birthDay 出生日期
+     * @apiParam {String} address 地址
+     * @apiParam {long} tel 电话
+     * @apiParam {String} email 邮箱
+     * @apiParam {String} wx 微信
+     * @apiParam {String} qq QQ
+     * @apiParam {String} iCard 身份证号
+     * @apiParam {String} selfEvaluation 自我评价
+     * @apiParamExample {json} 请求样例：
+     *                /user/modifyUserInfo?id=402881916c4b283e016c4b34632e0001&name=张三-改&nation=汉族-改&age=18&political=党员-改&nativePlace=北京北京-改&university=北京大学-改&major=计算机科学与技术-改&education=博士-改&birthDay=20190801&address=北京海淀-改&tel=13839724066&email=11@qq.com-改&wx=test-改&qq=13839724-改&iCard=411526198701191036&selfEvaluation=幽默-改
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                                 404:用户详情不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"qq": "13839724-改","wx": "test-改","birthDay": "20190801","address": "北京海淀-改","education": "博士-改","nation": "汉族-改","university": "北京大学-改","political": "党员-改","selfEvaluation": "幽默-改","major": "计算机科学与技术-改","name": "张三-改","nativePlace": "北京北京-改","tel": "13839724066","id": "402881916c4b283e016c4b34632e0001","iCard": "","email": "11@qq.com-改","age": "18"
+     *     }
+     * }
+     */
+    @PostMapping("/modifyUserInfo")
+    public JsonResult modifyUserInfo(String id,
+                                     String name,
+                                     String nation,
+                                     @RequestParam(defaultValue = "0") int age,
+                                     String political,
+                                     String nativePlace,
+                                     String university,
+                                     String major,
+                                     String education,
+                                     String birthDay,
+                                     String address,
+                                     @RequestParam(defaultValue = "0L") long tel,
+                                     String email,
+                                     String wx,
+                                     String qq,
+                                     String iCard,
+                                     String selfEvaluation) {
+        if (isBlank(id)) {
+            return JsonResult.blank();
+        }
+        UserInfo userInfo = userService.findUserInfoById(id);
+        if (userInfo == null) {
+            return JsonResult.notFound("用户详情不存在");
+        }
+        userInfo = userService.modifyUserInfo(userInfo, name, nation, age,
+                political, nativePlace, university, major,
+                education, birthDay, address, tel,
+                email, wx, qq, iCard, selfEvaluation);
+        jsonResult.setData(JsonUtils.getJson(userInfo));
+        return jsonResult;
+    }
+
+    /**
      * @api {post} /user/groupUser 组织用户分页
      * @apiGroup User
      * @apiVersion 2.0.0
@@ -735,7 +875,7 @@ public class UserController extends BaseController {
      * @apiParam {String} labelId 标签ID,必填
      * @apiParam {String} userId 用户ID,必填
      * @apiParamExample {json} 请求样例
-     *                /user/delUserLabel?id=402881916c471adc016c4721d2250000
+     *                /user/delUserLabel?labelId=402881916c471adc016c472906340013&userId=402881916c476c6a016c47716397000a
      * @apiSuccess (200) {int} code 200:成功</br>
      *                              404:用户标签不存在</br>
      * @apiSuccess (200) {String} message 信息
