@@ -21,9 +21,12 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Entity - 基类
- *
- * @author 念
+ * @ClassName: User
+ * @project: IYunDao
+ * @author: 念
+ * @Date: 8:46 2019/8/5
+ * @Description: Entity - 基类
+ * @Version: V1.0
  */
 @MappedSuperclass
 public abstract class BaseEntity<ID extends Serializable> implements Serializable {

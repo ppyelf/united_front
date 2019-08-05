@@ -6,6 +6,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+/**
+ * @ClassName: UnitedFrontApplication
+ * @project: IYunDao
+ * @author: 念
+ * @Date: 8:46 2019/8/5
+ * @Description: 启动类
+ * @Version: V1.0
+ */
 @SpringBootApplication
 @ComponentScan({
         "com.iyundao.base.*",
