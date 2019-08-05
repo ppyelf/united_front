@@ -10,10 +10,10 @@ import java.util.List;
 
 /**
  * @ClassName: PoliticsDeptionRepository
- * @project: //todo
+ * @project:
  * @author: 13620
  * @Date: 2019/8/1
- * @Description:
+ * @Description: 参与部门组织机构
  * @Version: V1.0
  */
 @Repository

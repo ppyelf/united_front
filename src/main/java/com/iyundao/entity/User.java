@@ -116,6 +116,32 @@ public class User extends BaseEntity<String> {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserLabel> labels;
 
+    /**
+     * 发布文章
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<SpeechArticle> speechArticle;
+
+    /**
+     * 参与讨论信息
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<SpeechDiscussion> speechDiscussion;
+
+    /**
+     * 理论研究
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<SpeechStudy> speechStudies;
+
+    /**
+     * 个人积分记录
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ScoreUser> scoreUser;
+
+
+
     public String getAccount() {
         return account;
     }
@@ -243,6 +269,40 @@ public class User extends BaseEntity<String> {
     public void setLabels(Set<UserLabel> labels) {
         this.labels = labels;
     }
+
+    public Set<SpeechArticle> getSpeechArticle() {
+        return speechArticle;
+    }
+
+    public void setSpeechArticle(Set<SpeechArticle> speechArticle) {
+        this.speechArticle = speechArticle;
+    }
+
+    public Set<SpeechDiscussion> getSpeechDiscussion() {
+        return speechDiscussion;
+    }
+
+    public void setSpeechDiscussion(Set<SpeechDiscussion> speechDiscussion) {
+        this.speechDiscussion = speechDiscussion;
+    }
+
+    public Set<SpeechStudy> getSpeechStudies() {
+        return speechStudies;
+    }
+
+    public void setSpeechStudies(Set<SpeechStudy> speechStudies) {
+        this.speechStudies = speechStudies;
+    }
+
+    public Set<ScoreUser> getScoreUser() {
+        return scoreUser;
+    }
+
+    public void setScoreUser(Set<ScoreUser> scoreUser) {
+        this.scoreUser = scoreUser;
+    }
+
+
 
     /**
      * 账号类型

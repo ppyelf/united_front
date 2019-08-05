@@ -6,10 +6,10 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @ClassName: PoliticsUserRepository
- * @project: //todo
+ * @project:
  * @author: 13620
  * @Date: 2019/8/1
- * @Description:
+ * @Description: 参政议政关联人员表
  * @Version: V1.0
  */
 @Repository

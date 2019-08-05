@@ -11,10 +11,10 @@ import java.util.List;
 
 /**
  * @ClassName: PoliticsIssueDataRepository
- * @project: //todo
+ * @project:
  * @author: 13620
  * @Date: 2019/8/1
- * @Description:
+ * @Description: 议题数据
  * @Version: V1.0
  */
 @Repository

@@ -71,6 +71,14 @@ public class Group extends BaseEntity<String> {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<PoliticsDeption> politicsDeption;
 
+    /**
+     * 组织积分记录
+     */
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ScoreDeption> scoreDeption;
+
+
+
     public String getName() {
         return name;
     }
@@ -134,4 +142,15 @@ public class Group extends BaseEntity<String> {
     public void setPoliticsDeption(Set<PoliticsDeption> politicsDeption) {
         this.politicsDeption = politicsDeption;
     }
+
+    public Set<ScoreDeption> getScoreDeption() {
+        return scoreDeption;
+    }
+
+    public void setScoreDeption(Set<ScoreDeption> scoreDeption) {
+        this.scoreDeption = scoreDeption;
+    }
+
+
+
 }

@@ -12,10 +12,10 @@ import java.util.List;
 
 /**
  * @ClassName: PoliticsDiscussDataRepository
- * @project: //todo
+ * @project:
  * @author: 13620
  * @Date: 2019/8/1
- * @Description:
+ * @Description: 讨论数据
  * @Version: V1.0
  */
 @Repository

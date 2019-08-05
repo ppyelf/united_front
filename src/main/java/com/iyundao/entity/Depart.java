@@ -64,6 +64,13 @@ public class Depart extends BaseEntity<String> {
     @OneToMany(mappedBy = "depart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<PoliticsDeption> politicsDeption;
 
+    /**
+     * 部门积分记录
+     */
+    @OneToMany(mappedBy = "depart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ScoreDeption> scoreDeption;
+
+
     public String getName() {
         return name;
     }
@@ -119,4 +126,14 @@ public class Depart extends BaseEntity<String> {
     public void setPoliticsDeption(Set<PoliticsDeption> politicsDeption) {
         this.politicsDeption = politicsDeption;
     }
+
+    public Set<ScoreDeption> getScoreDeption() {
+        return scoreDeption;
+    }
+
+    public void setScoreDeption(Set<ScoreDeption> scoreDeption) {
+        this.scoreDeption = scoreDeption;
+    }
+
+
 }
