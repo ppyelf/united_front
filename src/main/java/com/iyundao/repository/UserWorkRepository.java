@@ -2,7 +2,10 @@ package com.iyundao.repository;
 
 import com.iyundao.base.BaseRepository;
 import com.iyundao.entity.UserWork;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @ClassName: UserWorkRepository
@@ -15,4 +18,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserWorkRepository extends BaseRepository<UserWork, String> {
 
+    /**
+     * 查询用户工作履历集合
+     * @param userId
+     * @return
+     */
+    @Query("select w from UserWork w where w.user.id = ?1")
+    List<UserWork> findUserWorkByUserId(String userId);
 }

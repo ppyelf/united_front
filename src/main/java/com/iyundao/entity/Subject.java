@@ -55,12 +55,6 @@ public class Subject extends BaseEntity<String> {
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Group> groups;
 
-    /**
-     * 参政议政关系
-     */
-    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<PoliticsDeption> politicsDeption;
-
     public enum SUBJECT_TYPE{
         /**
          * 总院
@@ -151,11 +145,4 @@ public class Subject extends BaseEntity<String> {
         this.groups = groups;
     }
 
-    public Set<PoliticsDeption> getPoliticsDeption() {
-        return politicsDeption;
-    }
-
-    public void setPoliticsDeption(Set<PoliticsDeption> politicsDeption) {
-        this.politicsDeption = politicsDeption;
-    }
 }

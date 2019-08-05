@@ -93,8 +93,8 @@ public class Page<T> implements Serializable {
 	 *
 	 * @return 搜索属性
 	 */
-	public String getSearchProperty() {
-		return pageable.getSearchProperty();
+	public String getSearchKey() {
+		return pageable.getSearchKey();
 	}
 
 	/**

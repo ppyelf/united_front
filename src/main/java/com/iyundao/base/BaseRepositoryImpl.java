@@ -271,7 +271,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
         Predicate predicate = query.getRestriction() != null
                 ? query.getRestriction()
                 : builder.conjunction();
-        String searchProperty = pageable.getSearchProperty();
+        String searchProperty = pageable.getSearchKey();
         String searchValue = pageable.getSearchValue();
         if (StringUtils.isNotEmpty(searchProperty) && StringUtils.isNotEmpty(searchValue)) {
             Path<String> searchPath = getPath(root, searchProperty);
@@ -279,9 +279,9 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
                 predicate = builder.and(predicate, builder.like(searchPath, "%" + searchValue + "%"));
             }
         }
-        List<Order> orderList = toOrders(root, pageable.getOrders());
+        List<javax.persistence.criteria.Order> orderList = toOrders(root, pageable.getOrders());
         if (CollectionUtils.isEmpty(orderList)) {
-            orderList.add((Order) builder.asc(getPath(root, "createdDate")));
+            orderList.add(builder.asc(getPath(root, "createdDate")));
         }
 
         query.where(predicate);
@@ -303,7 +303,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
         Predicate predicate = query.getRestriction() == null
                 ? builder.conjunction()
                 : query.getRestriction();
-        String searchProperty = pageable.getSearchProperty();
+        String searchProperty = pageable.getSearchKey();
         String searchValue = pageable.getSearchValue();
         if (StringUtils.isNotEmpty(searchProperty) && StringUtils.isNotEmpty(searchValue)) {
             Path<String> searchPath = getPath(root, searchProperty);
@@ -311,9 +311,9 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
                 predicate = builder.and(predicate, builder.like(searchPath, "%" + searchValue + "%"));
             }
         }
-        List<Order> orderList = toOrders(root, pageable.getOrders());
+        List<javax.persistence.criteria.Order> orderList = toOrders(root, pageable.getOrders());
         if (CollectionUtils.isEmpty(orderList)) {
-            orderList.add((Order) builder.asc(getPath(root, "createdDate")));
+            orderList.add(builder.asc(getPath(root, "createdDate")));
         }
 
         query.where(predicate);
@@ -368,7 +368,7 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
         Root<T> countRoot = countQuery.from(entityClass);
-        String searchProperty = pageable.getSearchProperty();
+        String searchProperty = pageable.getSearchKey();
         String searchValue = pageable.getSearchValue();
         Predicate predicate = builder.conjunction();
         if (StringUtils.isNotEmpty(searchProperty) && StringUtils.isNotEmpty(searchValue)) {
@@ -395,8 +395,8 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
      *            排序
      * @return Order
      */
-    protected List<Order> toOrders(Root<T> root, List<Order> orders) {
-        List<Order> list = new ArrayList<>();
+    protected List<javax.persistence.criteria.Order> toOrders(Root<T> root, List<Order> orders) {
+        List<javax.persistence.criteria.Order> list = new ArrayList<>();
         CriteriaBuilder builder = em.getCriteriaBuilder();
         if (root == null || CollectionUtils.isEmpty(orders)) {
             return list;
@@ -417,13 +417,13 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
         return list;
     }
 
-    private void orderSwitch(Order.Direction direction, List<Order> list, CriteriaBuilder cb, Path<?> path) {
+    private void orderSwitch(Order.Direction direction, List<javax.persistence.criteria.Order> list, CriteriaBuilder cb, Path<?> path) {
         switch (direction) {
             case asc :
-                list.add((Order) cb.asc(path));
+                list.add(cb.asc(path));
                 break;
             case desc :
-                list.add((Order) cb.desc(path));
+                list.add(cb.desc(path));
                 break;
         }
     }
@@ -480,13 +480,9 @@ public class BaseRepositoryImpl<T extends BaseEntity<String>, ID> implements Bas
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    @Transactional(rollbackFor = Exception.class)
     public void deleteInBatch(Iterable<T> entities) {
-        for (T entity : entities) {
-            delete(entity);
-            flush();
-            clear();
-        }
+
     }
 
     @Override

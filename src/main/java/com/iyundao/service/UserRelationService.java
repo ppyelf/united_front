@@ -76,4 +76,13 @@ public interface UserRelationService {
      * @return
      */
     List<UserRelation> findByUserIds(String[] shareUserIds);
+
+    /**
+     * 根据部门ID或小组ID下的用户ID集合获取用户关系集合信息
+     * @param departId
+     * @param groupId
+     * @param userIds
+     * @return
+     */
+    List<UserRelation> findByDepartIdOrGroupIdAndUserIds(String departId, String groupId, String[] userIds);
 }

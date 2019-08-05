@@ -7,12 +7,8 @@ import com.iyundao.base.Page;
 import com.iyundao.base.Pageable;
 import com.iyundao.base.annotation.CurrentSubject;
 import com.iyundao.base.utils.JsonResult;
-import com.iyundao.base.utils.JsonUtils;
 import com.iyundao.entity.*;
-import com.iyundao.service.ActivityService;
-import com.iyundao.service.PermissionService;
-import com.iyundao.service.RoleService;
-import com.iyundao.service.UserService;
+import com.iyundao.service.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -21,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 
@@ -54,6 +49,9 @@ public class UserController extends BaseController {
     @Autowired
     private PermissionService permissionService;
 
+    @Autowired
+    private LabelService labelService;
+
     /**
      * @api {POST} /user/checkCode 检测code
      * @apiGroup User
@@ -81,7 +79,7 @@ public class UserController extends BaseController {
 
     /**
      * @api {POST} /user/checkLabelCode 检测标签code
-     * @apiGroup User
+     * @apiGroup Label
      * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 检测标签编号是否存在
@@ -102,7 +100,7 @@ public class UserController extends BaseController {
     @PostMapping("/checkLabelCode")
     public JsonResult checkLabelCode(String code) {
         jsonResult = JsonResult.success();
-        if (userService.existsLabelCode(code)) {
+        if (labelService.existsCode(code)) {
             jsonResult.setCode(400);
             jsonResult.setMessage("已存在");
         } else {
@@ -142,7 +140,7 @@ public class UserController extends BaseController {
         }
         JSONArray arr = new JSONArray();
         for (Industry industry : list) {
-            JSONObject json = JsonUtils.getJson(industry);
+            JSONObject json = getJson(industry);
             arr.add(json);
         }
         jsonResult.setData(arr);
@@ -207,13 +205,15 @@ public class UserController extends BaseController {
             return JsonResult.paramError();
         }
         Pageable pageable = new Pageable(page, size);
-        pageable.setSearchProperty(key);
+        pageable.setSearchKey(key);
         pageable.setSearchValue(value);
+        pageable.setPageNumber(page);
+        pageable.setPageSize(size);
         Page<User> userPage = userService.findByKey(pageable);
         if (CollectionUtils.isEmpty(userPage.getContent())) {
             return JsonResult.notFound("不存在此用户");
         }
-        jsonResult.setData(JsonUtils.getPage(userPage));
+        jsonResult.setData(getPage(userPage));
         return jsonResult;
     }
 
@@ -258,7 +258,6 @@ public class UserController extends BaseController {
                           String name,
                           String code,
                           @RequestParam(defaultValue = "0") int sex,
-                          @RequestParam(defaultValue = "0") int userType,
                           @CurrentSubject Subject subject,
                           String departId,
                           String groupsId,
@@ -286,7 +285,7 @@ public class UserController extends BaseController {
         if (CollectionUtils.isEmpty(roles) || CollectionUtils.isEmpty(permissions)) {
             return JsonResult.failure(605, "账号必须分配角色,权限");
         }
-        List<Label> labels = userService.findLabelByIds(labelIds);
+        List<Label> labels = labelService.findLabelByIds(labelIds);
         user.setRemark(remark);
         return userService.save(user, subject, departId, groupsId, roles, permissions, labels, jsonResult);
     }
@@ -319,6 +318,177 @@ public class UserController extends BaseController {
             return JsonResult.notFound("此用户不存在");
         }
         jsonResult.setData(userService.getUserInfoJson(user));
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/addUserInfo 添加用户详情
+     * @apiGroup UserInfo
+     * @apiVersion 1.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 添加用户详情,必须在建立个人账号认账之后进行
+     * @apiParam {String} userId 用户ID, 必填
+     * @apiParam {String} name 真实姓名
+     * @apiParam {String} nation 民族
+     * @apiParam {int} age 年龄
+     * @apiParam {String} political 政治面貌
+     * @apiParam {String} nativePlace 籍贯
+     * @apiParam {String} university 毕业院校
+     * @apiParam {String} major 专业
+     * @apiParam {String} education 学历
+     * @apiParam {String} birthDay 出生日期
+     * @apiParam {String} address 地址
+     * @apiParam {long} tel 电话
+     * @apiParam {String} email 邮箱
+     * @apiParam {String} wx 微信
+     * @apiParam {String} qq QQ
+     * @apiParam {String} iCard 身份证号
+     * @apiParam {String} selfEvaluation 自我评价
+     * @apiParamExample {json} 请求样例：
+     *                /user/addUserInfo?userId=0a4179fc06cb49e3ac0db7bcc8cf0882&name=张三&nation=汉族&age=18&political=党员&nativePlace=北京北京&university=北京大学&major=计算机科学与技术&education=博士&birthDay=20190801&address=北京海淀&tel=13839724066&email=11@qq.com&wx=test&qq=13839724&iCard=411526198701191036&selfEvaluation=幽默
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                                 404:用户不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"qq": "13839724","wx": "test","birthDay": "20190801","address": "北京海淀","education": "博士","nation": "汉族","university": "北京大学","political": "党员","selfEvaluation": "幽默","major": "计算机科学与技术","name": "张三","nativePlace": "北京北京","tel": "13839724066","id": "402881916c4b283e016c4b34632e0001","iCard": "","email": "11@qq.com","age": "18"
+     *     }
+     * }
+     */
+    @PostMapping("/addUserInfo")
+    public JsonResult addUserInfo(String userId,
+                                  String name,
+                                  String nation,
+                                  @RequestParam(defaultValue = "0") int age,
+                                  String political,
+                                  String nativePlace,
+                                  String university,
+                                  String major,
+                                  String education,
+                                  String birthDay,
+                                  String address,
+                                  @RequestParam(defaultValue = "0L") long tel,
+                                  String email,
+                                  String wx,
+                                  String qq,
+                                  String iCard,
+                                  String selfEvaluation) {
+        if (isBlank(userId)) {
+            return JsonResult.blank();
+        }
+        User user = userService.findById(userId);
+        if (user == null) {
+            return JsonResult.notFound("用户不存在");
+        }
+        UserInfo userInfo = userService.saveUserInfo(user, name, nation, age,
+                political, nativePlace, university, major,
+                education, birthDay, address, tel,
+                email, wx, qq, iCard, selfEvaluation);
+        jsonResult.setData(getJson(userInfo));
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/modifyUserInfo 修改用户详情
+     * @apiGroup UserInfo
+     * @apiVersion 1.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 修改用户详情
+     * @apiParam {String} id 用户详情ID, 必填
+     * @apiParam {String} name 真实姓名
+     * @apiParam {String} nation 民族
+     * @apiParam {int} age 年龄
+     * @apiParam {String} political 政治面貌
+     * @apiParam {String} nativePlace 籍贯
+     * @apiParam {String} university 毕业院校
+     * @apiParam {String} major 专业
+     * @apiParam {String} education 学历
+     * @apiParam {String} birthDay 出生日期
+     * @apiParam {String} address 地址
+     * @apiParam {long} tel 电话
+     * @apiParam {String} email 邮箱
+     * @apiParam {String} wx 微信
+     * @apiParam {String} qq QQ
+     * @apiParam {String} iCard 身份证号
+     * @apiParam {String} selfEvaluation 自我评价
+     * @apiParamExample {json} 请求样例：
+     *                /user/modifyUserInfo?id=402881916c4b283e016c4b34632e0001&name=张三-改&nation=汉族-改&age=18&political=党员-改&nativePlace=北京北京-改&university=北京大学-改&major=计算机科学与技术-改&education=博士-改&birthDay=20190801&address=北京海淀-改&tel=13839724066&email=11@qq.com-改&wx=test-改&qq=13839724-改&iCard=411526198701191036&selfEvaluation=幽默-改
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                                 404:用户详情不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"qq": "13839724-改","wx": "test-改","birthDay": "20190801","address": "北京海淀-改","education": "博士-改","nation": "汉族-改","university": "北京大学-改","political": "党员-改","selfEvaluation": "幽默-改","major": "计算机科学与技术-改","name": "张三-改","nativePlace": "北京北京-改","tel": "13839724066","id": "402881916c4b283e016c4b34632e0001","iCard": "","email": "11@qq.com-改","age": "18"
+     *     }
+     * }
+     */
+    @PostMapping("/modifyUserInfo")
+    public JsonResult modifyUserInfo(String id,
+                                     String name,
+                                     String nation,
+                                     @RequestParam(defaultValue = "0") int age,
+                                     String political,
+                                     String nativePlace,
+                                     String university,
+                                     String major,
+                                     String education,
+                                     String birthDay,
+                                     String address,
+                                     @RequestParam(defaultValue = "0L") long tel,
+                                     String email,
+                                     String wx,
+                                     String qq,
+                                     String iCard,
+                                     String selfEvaluation) {
+        if (isBlank(id)) {
+            return JsonResult.blank();
+        }
+        UserInfo userInfo = userService.findUserInfoById(id);
+        if (userInfo == null) {
+            return JsonResult.notFound("用户详情不存在");
+        }
+        userInfo = userService.modifyUserInfo(userInfo, name, nation, age,
+                political, nativePlace, university, major,
+                education, birthDay, address, tel,
+                email, wx, qq, iCard, selfEvaluation);
+        jsonResult.setData(getJson(userInfo));
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/userInfoList 用户详情列表
+     * @apiGroup UserInfo
+     * @apiVersion 1.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 查看用户个人详情列表
+     * @apiParam {String} userId 用户ID, 必填
+     * @apiParamExample {json} 请求样例：
+     *                /user/userInfoList?id=402881916c4b283e016c4b34632e0001
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                                 404:用户详情不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"qq": "13839724-改","birthDay": "20190801","wx": "test-改","address": "北京海淀-改","education": "博士-改","nation": "汉族-改","university": "北京大学-改","political": "党员-改","selfEvaluation": "幽默-改","major": "计算机科学与技术-改","name": "张三-改","nativePlace": "北京北京-改","tel": "13839724066","id": "402881916c4b283e016c4b34632e0001","age": "18","email": "11@qq.com-改","iCard": ""
+     *     }
+     * }
+     */
+    @PostMapping("/userInfoList")
+    public JsonResult userInfoList(String userId) {
+        UserInfo userInfo = userService.findUserInfoByUserId(userId);
+        if (userInfo == null) {
+            return JsonResult.notFound("此用户暂无个人详情");
+        }
+        jsonResult.setData(getJson(userInfo));
         return jsonResult;
     }
 
@@ -400,7 +570,7 @@ public class UserController extends BaseController {
 
     /**
      * @api {POST} /user/addTrain 添加培训经历
-     * @apiGroup User
+     * @apiGroup UserTrain
      * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 添加个人的培训经历
@@ -444,13 +614,13 @@ public class UserController extends BaseController {
             return JsonResult.notFound("用户不存在");
         }
         UserTrain ut = userService.saveUserTrain(name, startTime, endTime, honor, remark, user);
-        jsonResult.setData(JsonUtils.getJson(ut));
+        jsonResult.setData(getJson(ut));
         return jsonResult;
     }
 
     /**
      * @api {POST} /user/viewTrain 查看培训经历
-     * @apiGroup User
+     * @apiGroup UserTrain
      * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 查看个人的培训经历
@@ -475,13 +645,48 @@ public class UserController extends BaseController {
         if (train == null) {
             return JsonResult.notFound("培训经历不存在");
         }
-        jsonResult.setData(JsonUtils.getJson(train));
+        jsonResult.setData(getJson(train));
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/listTrain 培训经历列表
+     * @apiGroup UserTrain
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 查看个人的培训经历列表
+     * @apiParam {String} userId 用户ID,必填
+     * @apiParamExample {json} 请求样例
+     *                /user/listTrain?id=402881916c45f80a016c45f970160000
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:培训经历不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": [{    "honor": "毕业",    "name": "教育培训",    "remark": "成就一生的学习",    "startTime": "20190731000000",    "id": "402881916c5071ac016c50e8cde80000",    "endTime": "20190731000000"}
+     *     ]
+     * }
+     */
+    @PostMapping("/listTrain")
+    public JsonResult listTrain(String userId) {
+        List<UserTrain> userTrains = userService.findUserTrainByUserId(userId);
+        if (CollectionUtils.isEmpty(userTrains)) {
+            return JsonResult.notFound("此用户没有添加培训经历");
+        }
+        JSONArray arr = new JSONArray();
+        for (UserTrain train : userTrains) {
+            arr.add(getJson(train));
+        }
+        jsonResult.setData(arr);
         return jsonResult;
     }
 
     /**
      * @api {POST} /user/delTrain 删除培训经历
-     * @apiGroup User
+     * @apiGroup UserTrain
      * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 删除个人培训经历
@@ -511,7 +716,7 @@ public class UserController extends BaseController {
 
     /**
      * @api {POST} /user/addWork 添加工作履历
-     * @apiGroup User
+     * @apiGroup UserWork
      * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 添加个人工作履历
@@ -560,13 +765,13 @@ public class UserController extends BaseController {
             return JsonResult.notFound("用户不存在");
         }
         UserWork work = userService.saveUserWork(companyName, industry, positionName, startTime, endTime, user);
-        jsonResult.setData(JsonUtils.getJson(work));
+        jsonResult.setData(getJson(work));
         return jsonResult;
     }
 
     /**
      * @api {POST} /user/viewWork 查看工作履历
-     * @apiGroup User
+     * @apiGroup UserWork
      * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 查看个人工作履历
@@ -591,13 +796,48 @@ public class UserController extends BaseController {
         if (work == null) {
             return JsonResult.notFound("用户工作履历不存在");
         }
-        jsonResult.setData(JsonUtils.getJson(work));
+        jsonResult.setData(getJson(work));
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /user/listWork 查看工作履历
+     * @apiGroup UserWork
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 查看个人工作履历
+     * @apiParam {String} id 工作履历ID,必填
+     * @apiParamExample {json} 请求样例
+     *                /user/listWork?userId=402881916c46c2a1016c46c70c9a0000
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:用户工作履历不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": [{    "positionName": "经理",    "companyName": "中国文学出版社",    "startTime": "20190731000000",    "id": "402881916c5071ac016c50ef58be0001",    "endTime": "20190731000000"}
+     *     ]
+     * }
+     */
+    @PostMapping("/listWork")
+    public JsonResult listWork(String userId) {
+        List<UserWork> list = userService.findUserWorkByUserId(userId);
+        if (CollectionUtils.isEmpty(list)) {
+            return JsonResult.notFound("此用户尚未添加工作履历");
+        }
+        JSONArray arr = new JSONArray();
+        for (UserWork work : list) {
+            arr.add(getJson(work));
+        }
+        jsonResult.setData(arr);
         return jsonResult;
     }
 
     /**
      * @api {POST} /user/delWork 删除工作履历
-     * @apiGroup User
+     * @apiGroup UserWork
      * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 删除个人工作履历
@@ -626,11 +866,11 @@ public class UserController extends BaseController {
     }
 
     /**
-     * @api {POST} /user/addLabel 添加标签
-     * @apiGroup User
+     * @api {POST} /user/addLabel 添加用户标签
+     * @apiGroup Label
      * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
-     * @apiDescription 添加标签
+     * @apiDescription 添加用户标签
      * @apiParam {String} name 名称,必填
      * @apiParam {String} code 编号,必填
      * @apiParam {String} remark 描述
@@ -656,20 +896,24 @@ public class UserController extends BaseController {
         if (isBlank(name, code)) {
             return JsonResult.blank();
         }
-        if (userService.existsLabelCode(code)) {
+        if (labelService.existsCode(code)) {
             return JsonResult.failure(400, "标签编号已存在");
         }
-        Label label = userService.createLabel(name, code, remark);
-        jsonResult.setData(JsonUtils.getJson(label));
+        Label label = labelService.createLabel(name, code, remark, Label.LABEL_TYPE.user);
+        jsonResult.setData(getJson(label));
         return jsonResult;
     }
 
     /**
-     * @api {GET} /user/labelList 标签列表
-     * @apiGroup User
+     * @api {GET} /user/labelList 用户标签列表
+     * @apiGroup Label
      * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
-     * @apiDescription 添加标签
+     * @apiDescription 用户标签列表
+     * @apiParam {String} key 查询字段
+     * @apiParam {String} value 查询值
+     * @apiParam {int} num 页码,默认0
+     * @apiParam {int} size 长度,默认10
      * @apiParamExample {json} 请求样例
      *                /user/labelList
      * @apiSuccess (200) {int} code 200:成功</br>
@@ -678,30 +922,35 @@ public class UserController extends BaseController {
      * @apiSuccess (200) {String} data 返回用户信息
      * @apiSuccessExample {json} 返回样例:
      * {
-     *     "code": 400,
-     *     "message": "已存在",
-     *     "data": [{    "code": "123456",    "name": "高知群体",    "remark": "告知群体",    "id": "402881916c471adc016c4721d2250000"},{    "code": "12345",    "name": "老群团",    "remark": "老群团",    "id": "402881916c471adc016c472906340003"}
-     *     ]
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"total": 1,"totalPage": 1,"page": 0,"content": [    {        "code": "1",        "name": "老群团1",        "remark": "老群团1",        "id": "402881916c471adc016c472906340013"    }]
+     *     }
      * }
      */
     @GetMapping("/labelList")
-    public JsonResult labelList() {
-        List<Label> list = userService.findAllLabels();
-        JSONArray arr = new JSONArray();
-        for (Label l : list) {
-            JSONObject json = JsonUtils.getJson(l);
-            arr.add(json);
+    public JsonResult labelList(String key,
+                                String value,
+                                @RequestParam(defaultValue = "0") int num,
+                                @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = new Pageable();
+        if (!isBlank(key, value)) {
+            pageable.setSearchKey(key);
+            pageable.setSearchValue(value);
         }
-        jsonResult.setData(arr);
+        pageable.setPageNumber(num);
+        pageable.setPageSize(size);
+        Page<Label> page = labelService.findUserLabelPage(pageable);
+        jsonResult.setData(getPage(page));
         return jsonResult;
     }
 
     /**
-     * @api {POST} /user/delLabel 删除标签
-     * @apiGroup User
+     * @api {POST} /user/delLabel 删除用户标签
+     * @apiGroup Label
      * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
-     * @apiDescription 删除标签
+     * @apiDescription 删除用户标签
      * @apiParam {String} id 标签ID,必填
      * @apiParamExample {json} 请求样例
      *                /user/delLabel?id=402881916c471adc016c4721d2250000
@@ -718,24 +967,24 @@ public class UserController extends BaseController {
      */
     @PostMapping("/delLabel")
     public JsonResult delLabel(String id) {
-        Label label = userService.findLabelById(id);
+        Label label = labelService.findLabelById(id);
         if (label == null) {
             return JsonResult.notFound("标签不存在");
         }
-        userService.deleteLabel(label);
+        labelService.deleteLabel(label);
         return JsonResult.success();
     }
 
     /**
-     * @api {POST} /user/delUserLabel 删除用户标签
-     * @apiGroup User
+     * @api {POST} /user/delUserLabel 删除用户已有标签
+     * @apiGroup Label
      * @apiVersion 2.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
-     * @apiDescription 删除用户标签
+     * @apiDescription 删除用户已有标签
      * @apiParam {String} labelId 标签ID,必填
      * @apiParam {String} userId 用户ID,必填
      * @apiParamExample {json} 请求样例
-     *                /user/delUserLabel?id=402881916c471adc016c4721d2250000
+     *                /user/delUserLabel?labelId=402881916c471adc016c472906340013&userId=402881916c476c6a016c47716397000a
      * @apiSuccess (200) {int} code 200:成功</br>
      *                              404:用户标签不存在</br>
      * @apiSuccess (200) {String} message 信息
@@ -750,11 +999,11 @@ public class UserController extends BaseController {
     @PostMapping("/delUserLabel")
     public JsonResult delUserLabel(String labelId,
                                    String userId) {
-        UserLabel userLabel = userService.findUserLabelByUserIdAndLabelId(userId, labelId);
+        UserLabel userLabel = labelService.findUserLabelByUserIdAndLabelId(userId, labelId);
         if (userLabel == null) {
             return JsonResult.notFound("用户标签不存在");
         }
-        userService.delUserLabel(userLabel);
+        labelService.delUserLabel(userLabel);
         return JsonResult.success();
     }
 
@@ -818,12 +1067,12 @@ public class UserController extends BaseController {
             return JsonResult.failure(603, "签到类型不能为空");
         }
         s = activityService.saveUserSign(s);
-        jsonResult.setData(JsonUtils.getJson(s));
+        jsonResult.setData(getJson(s));
         return jsonResult;
     }
 
     private JSONObject convertUser(User user) {
-        JSONObject json = JsonUtils.getJson(user);
+        JSONObject json = getJson(user);
         if (user.getStatus() != null) {
             switch (user.getStatus().ordinal()) {
                 case  0:

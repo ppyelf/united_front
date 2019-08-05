@@ -60,7 +60,7 @@ public class UserGroupController extends BaseController {
         List<UserGroup> userGroups = userGroupService.getListByFatherIsNull();
         JSONArray arr = new JSONArray();
         for (UserGroup ug : userGroups) {
-            arr.add(JsonUtils.getJson(ug));
+            arr.add(getJson(ug));
         }
         jsonResult.setData(arr);
         return jsonResult;
@@ -102,7 +102,7 @@ public class UserGroupController extends BaseController {
         if (userGroup == null) {
             return JsonResult.notFound("未查询到此用户组");
         }
-        jsonResult.setData(JsonUtils.getJson(userGroup));
+        jsonResult.setData(getJson(userGroup));
         return jsonResult;
     }
 
@@ -150,7 +150,7 @@ public class UserGroupController extends BaseController {
             userGroup.setUser(user == null ? null : user);
         }
         userGroup = userGroupService.save(userGroup);
-        jsonResult.setData(JsonUtils.getJson(userGroup));
+        jsonResult.setData(getJson(userGroup));
         return jsonResult;
     }
 
@@ -204,7 +204,7 @@ public class UserGroupController extends BaseController {
             ug.setUser(user);
         }
         ug = userGroupService.save(ug);
-        jsonResult.setData(JsonUtils.getJson(ug));
+        jsonResult.setData(getJson(ug));
         return jsonResult;
     }
 
@@ -243,7 +243,7 @@ public class UserGroupController extends BaseController {
         List<UserGroup> userGroup = userGroupService.findByFatherId(id);
         JSONArray arr = new JSONArray();
         for (UserGroup ug : userGroup) {
-            arr.add(JsonUtils.getJson(ug));
+            arr.add(getJson(ug));
         }
         jsonResult.setData(arr);
         return jsonResult;

@@ -59,7 +59,7 @@ public class IndexController extends BaseController {
 
     /**
      * @api {POST} /login 用户登录
-     * @apiGroup 首页
+     * @apiGroup index
      * @apiVersion 2.0.0
      * @apiDescription 用于用户登录
      * @apiParam {String} account 用户名
@@ -102,7 +102,7 @@ public class IndexController extends BaseController {
 
     /**
      * @api {GET} /subjectList 个人机构列表
-     * @apiGroup 首页
+     * @apiGroup index
      * @apiVersion 2.0.0
      * @apiDescription 个人机构列表
      * @apiParam {String} id 用户ID

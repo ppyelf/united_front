@@ -50,6 +50,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     private SignRepository signRepository;
 
+    @Autowired
+    private LabelRepository labelRepository;
+
     @Override
     @Modifying
     public Activity save(Activity activity, List<Attendance> attendances, List<ActivityFile> activityFiles, List<ActivityImage> activityImages, String subjectId, String departId, String groupId) {
@@ -181,6 +184,4 @@ public class ActivityServiceImpl implements ActivityService {
     public ActivityFile findByIds(String id) {
         return activityFileRepository.find(id);
     }
-
-
 }

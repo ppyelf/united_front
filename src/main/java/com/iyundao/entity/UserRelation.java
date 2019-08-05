@@ -3,6 +3,7 @@ package com.iyundao.entity;
 import com.iyundao.base.BaseEntity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @ClassName: UserRelation
@@ -53,6 +54,13 @@ public class UserRelation extends BaseEntity<String> {
     @JoinColumn(name = "USERID")
     private User user;
 
+    /**
+     * 岗位
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "POSITIONID")
+    private Position position;
+
     public Subject getSubject() {
         return subject;
     }
@@ -93,5 +101,11 @@ public class UserRelation extends BaseEntity<String> {
         this.userGroup = userGroup;
     }
 
+    public Position getPosition() {
+        return position;
+    }
 
+    public void setPosition(Position position) {
+        this.position = position;
+    }
 }

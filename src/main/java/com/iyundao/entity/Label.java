@@ -43,6 +43,25 @@ public class Label extends BaseEntity<String> {
     @OneToMany(mappedBy = "label", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserLabel> userLabels;
 
+    /**
+     * 标签类型
+     */
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "TYPE", nullable = false, length = 1, columnDefinition = "tinyint(1) default '0'")
+    private LABEL_TYPE type;
+
+    public enum LABEL_TYPE{
+        /**
+         * 用户类型
+         */
+        user,
+
+        /**
+         * 活动类型
+         */
+        activity
+    }
+
     public String getName() {
         return name;
     }
@@ -73,5 +92,13 @@ public class Label extends BaseEntity<String> {
 
     public void setUserLabels(Set<UserLabel> userLabels) {
         this.userLabels = userLabels;
+    }
+
+    public LABEL_TYPE getType() {
+        return type;
+    }
+
+    public void setType(LABEL_TYPE type) {
+        this.type = type;
     }
 }

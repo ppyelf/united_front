@@ -58,11 +58,6 @@ public class Depart extends BaseEntity<String> {
     @OneToMany(mappedBy = "depart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<UserRelation> userRelations;
 
-    /**
-     * 参政议政关系
-     */
-    @OneToMany(mappedBy = "depart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<PoliticsDeption> politicsDeption;
 
     public String getName() {
         return name;
@@ -110,13 +105,5 @@ public class Depart extends BaseEntity<String> {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public Set<PoliticsDeption> getPoliticsDeption() {
-        return politicsDeption;
-    }
-
-    public void setPoliticsDeption(Set<PoliticsDeption> politicsDeption) {
-        this.politicsDeption = politicsDeption;
     }
 }

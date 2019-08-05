@@ -9,10 +9,7 @@ import com.iyundao.base.annotation.CurrentSubject;
 import com.iyundao.base.utils.JsonResult;
 import com.iyundao.base.utils.JsonUtils;
 import com.iyundao.entity.*;
-import com.iyundao.service.ActivityService;
-import com.iyundao.service.AttendanceService;
-import com.iyundao.service.SignService;
-import com.iyundao.service.UserService;
+import com.iyundao.service.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
@@ -52,6 +49,9 @@ public class ActivityController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LabelService labelService;
 
     /**
      * @api {POST} /activity/upload_file 上传文件
@@ -108,7 +108,7 @@ public class ActivityController extends BaseController {
         file.setContent(content);
         file.setFromTo(fromTo);
         file = activityService.saveFile(file);
-        jsonResult.setData(JsonUtils.getJson(file));
+        jsonResult.setData(getJson(file));
         return jsonResult;
     }
 
@@ -181,7 +181,7 @@ public class ActivityController extends BaseController {
         image.setUrl(url);
         image.setSuffix(suffix);
         image = activityService.saveImage(image);
-        jsonResult.setData(JsonUtils.getJson(image));
+        jsonResult.setData(getJson(image));
         return jsonResult;
     }
 
@@ -258,7 +258,7 @@ public class ActivityController extends BaseController {
             return JsonResult.failure(602, "出勤类型异常");
         }
         Attendance attendance = attendanceService.save(null, startTime, endTime, day, type, axisx, axisy, area);
-        jsonResult.setData(JsonUtils.getJson(attendance));
+        jsonResult.setData(getJson(attendance));
         return jsonResult;
     }
 
@@ -497,7 +497,6 @@ public class ActivityController extends BaseController {
         if (activity == null) {
             return JsonResult.notFound("活动不存在");
         }
-        //todo
         jsonResult.setData(convertActivity(activity));
         return jsonResult;
     }
@@ -527,7 +526,7 @@ public class ActivityController extends BaseController {
                            @RequestParam(defaultValue = "10") int size,
                            String search) {
         Page<Activity> activityPage = activityService.findAllForPage(new Pageable(page, size));
-        jsonResult.setData(JsonUtils.getPage(activityPage));
+        jsonResult.setData(getPage(activityPage));
         return jsonResult;
     }
 
@@ -578,12 +577,154 @@ public class ActivityController extends BaseController {
                                   @RequestParam(defaultValue = "0")int page,
                                   @RequestParam(defaultValue = "10")int size){
             Pageable pageable = new Pageable(page,size);
-            pageable.setSearchProperty("name");
+            pageable.setSearchKey("name");
             pageable.setSearchValue(name);
             Page<Activity> activityPage = activityService.findAllForPage(pageable);
-        JSONObject jsonObject = JsonUtils.getPage(activityPage);
+        JSONObject jsonObject = getPage(activityPage);
         jsonResult.setData(jsonObject);
         return jsonResult;
+    }
+
+    /**
+     * @api {POST} /activity/addLabel 添加活动标签
+     * @apiGroup Label
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 添加活动标签
+     * @apiParam {String} name 名称,必填
+     * @apiParam {String} code 编号,必填
+     * @apiParam {String} remark 描述
+     * @apiParamExample {json} 请求样例
+     *                /user/addLabel?name=高知群体&code=123456&remark=告知群体
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              400:标签编号已存在</br>
+     *                              404:用户工作履历不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"code": "123456","name": "高知群体","remark": "告知群体","id": "402881916c471adc016c4721d2250000"
+     *     }
+     * }
+     */
+    @PostMapping("/addLabel")
+    public JsonResult addLabel(String name,
+                               String code,
+                               String remark) {
+        if (isBlank(name, code)) {
+            return JsonResult.blank();
+        }
+        if (labelService.existsCode(code)) {
+            return JsonResult.failure(400, "标签编号已存在");
+        }
+        Label label = labelService.createLabel(name, code, remark, Label.LABEL_TYPE.activity);
+        jsonResult.setData(getJson(label));
+        return jsonResult;
+    }
+
+    /**
+     * @api {GET} /activity/labelList 活动标签列表
+     * @apiGroup Label
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 活动标签列表
+     * @apiParam {String} key 查询字段
+     * @apiParam {String} value 查询值
+     * @apiParam {int} num 页码,默认0
+     * @apiParam {int} size 长度,默认10
+     * @apiParamExample {json} 请求样例
+     *                /user/labelList
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:用户工作履历不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": {"total": 1,"totalPage": 1,"page": 0,"content": [    {        "code": "1",        "name": "老群团1",        "remark": "老群团1",        "id": "402881916c471adc016c472906340013"    }]
+     *     }
+     * }
+     */
+    @GetMapping("/labelList")
+    public JsonResult labelList(String key,
+                                String value,
+                                @RequestParam(defaultValue = "0") int num,
+                                @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = new Pageable();
+        if (!isBlank(key, value)) {
+            pageable.setSearchKey(key);
+            pageable.setSearchValue(value);
+        }
+        pageable.setPageNumber(num);
+        pageable.setPageSize(size);
+        Page<Label> page = labelService.findActivityLabelPage(pageable);
+        jsonResult.setData(getPage(page));
+        return jsonResult;
+    }
+
+    /**
+     * @api {POST} /activity/delLabel 删除活动标签
+     * @apiGroup Label
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 删除活动标签
+     * @apiParam {String} id 标签ID,必填
+     * @apiParamExample {json} 请求样例
+     *                /user/delLabel?id=402881916c471adc016c4721d2250000
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:标签不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": []
+     * }
+     */
+    @PostMapping("/delLabel")
+    public JsonResult delLabel(String id) {
+        Label label = labelService.findLabelById(id);
+        if (label == null) {
+            return JsonResult.notFound("标签不存在");
+        }
+        labelService.deleteLabel(label);
+        return JsonResult.success();
+    }
+
+    /**
+     * @api {POST} /user/delActivityLabel 删除活动已有标签
+     * @apiGroup Label
+     * @apiVersion 2.0.0
+     * @apiHeader {String} IYunDao-AssessToken token验证
+     * @apiDescription 删除活动已有标签
+     * @apiParam {String} labelId 标签ID,必填
+     * @apiParam {String} userId 用户ID,必填
+     * @apiParamExample {json} 请求样例
+     *                /user/delActivityLabel?labelId=402881916c471adc016c472906340013&userId=402881916c476c6a016c47716397000a
+     * @apiSuccess (200) {int} code 200:成功</br>
+     *                              404:用户标签不存在</br>
+     * @apiSuccess (200) {String} message 信息
+     * @apiSuccess (200) {String} data 返回用户信息
+     * @apiSuccessExample {json} 返回样例:
+     * {
+     *     "code": 200,
+     *     "message": "成功",
+     *     "data": []
+     * }
+     */
+    @PostMapping("/delActivityLabel")
+    public JsonResult delActivityLabel(String labelId,
+                                   String userId) {
+        UserLabel userLabel = labelService.findUserLabelByUserIdAndLabelId(userId, labelId);
+        if (userLabel == null) {
+            return JsonResult.notFound("用户标签不存在");
+        }
+        labelService.delUserLabel(userLabel);
+        return JsonResult.success();
     }
 
 
@@ -593,18 +734,18 @@ public class ActivityController extends BaseController {
      * @return
      */
     private JSONObject convertActivity(Activity activity) {
-        JSONObject json = new JSONObject(JsonUtils.getJson(activity));
+        JSONObject json = new JSONObject(getJson(activity));
         JSONArray arr = new JSONArray();
         if (CollectionUtils.isNotEmpty(activity.getAttendances())) {
             for (Attendance attendance : activity.getAttendances()) {
-                arr.add(JsonUtils.getJson(attendance));
+                arr.add(getJson(attendance));
             }
             json.put("attendances", arr);
         }
         if (CollectionUtils.isNotEmpty(activity.getActivityFiles())) {
             arr = new JSONArray();
             for (ActivityFile file : activity.getActivityFiles()) {
-                arr.add(JsonUtils.getJson(file));
+                arr.add(getJson(file));
             }
             json.put("activityFiles", arr);
         }

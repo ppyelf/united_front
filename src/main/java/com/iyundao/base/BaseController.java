@@ -1,5 +1,6 @@
 package com.iyundao.base;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.iyundao.base.shiro.JwtToken;
@@ -28,6 +29,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +43,9 @@ import java.util.Set;
  * @Version: V2.0
  */
 @Component
-public abstract class BaseController {
+public abstract class BaseController implements Serializable {
+
+    private final static long serialVersionUID = -123497182943983217L;
 
     /**
      * 负责人
@@ -176,7 +180,7 @@ public abstract class BaseController {
         Session session = SecurityUtils.getSubject().getSession();
         User user = userService.findByAccount(account);
         //生成token
-        JSONObject json = JsonUtils.getJson(user);
+        JSONObject json = getJson(user);
         String token = JwtUtils.sign(account, currentTimeMillis);
         json.put("token",token );
         List<UserRelation> userRelations = userRelationService.findByUser(user);
@@ -217,7 +221,7 @@ public abstract class BaseController {
      * @return
      */
     public JSONObject getUploadJson(Object entity) {
-        JSONObject json = JsonUtils.getJson(entity);
+        JSONObject json = getJson(entity);
         json.put("url", uploadPath + json.get("url").toString());
         return json;
     }
@@ -228,5 +232,22 @@ public abstract class BaseController {
 
     public String getSalt() {
         return EncryptUtils.getSalt();
+    }
+
+    /**
+     * 封装JsonUtils中的getJson
+     * @param obj
+     * @return
+     */
+    protected JSONObject getJson(Object obj) {
+        return JsonUtils.getJson(obj);
+    }
+    /**
+     * 封装JsonUtils中的getJson
+     * @param obj
+     * @return
+     */
+    protected JSONObject getPage(Page<?> obj) {
+        return JsonUtils.getPage(obj);
     }
 }

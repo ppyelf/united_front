@@ -50,6 +50,6 @@ public class CurrentUserResolver implements HandlerMethodArgumentResolver {
             user = userService.findByAccount(JwtUtils.getClaim(token, SecurityConsts.ACCOUNT));
         } 
         SecurityUtils.getSubject().getSession().setAttribute("currentUser", user);
-        return user;
+        return user == null ? null : user;
     }
 }

@@ -97,7 +97,7 @@ public interface ActivityService {
      * @return
      * @param pageable
      */
-    Page<Activity> findAllForPage(Pageable  pageable);
+    Page<Activity> findAllForPage(Pageable pageable);
 
     /**
      * 保存用户签到流程
@@ -112,6 +112,4 @@ public interface ActivityService {
      * @return
      */
     ActivityFile findByIds(String id);
-
-
 }

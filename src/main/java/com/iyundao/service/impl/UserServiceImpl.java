@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 /**
  * @ClassName: UserServiceImpl
  * @project: IYunDao
@@ -58,10 +57,10 @@ public class UserServiceImpl implements UserService {
     private UserWorkRepository userWorkRepository;
 
     @Autowired
-    private LabelRepository labelRepository;
+    private UserLabelRepository userLabelRepository;
 
     @Autowired
-    private UserLabelRepository userLabelRepository;
+    private UserInfoRepository userInfoRepository;
 
     @Override
     public User findByAccount(String account) {
@@ -296,50 +295,58 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsLabelCode(String code) {
-        Label label = labelRepository.findByCode(code);
-        return label == null ? false : true;
+    public UserInfo saveUserInfo(User user, String name, String nation, int age, String political, String nativePlace, String university, String major, String education, String birthDay, String address, long tel, String email, String wx, String qq, String iCard, String selfEvaluation) {
+        UserInfo info = new UserInfo();
+        info.setCreatedDate(new Date());
+        info.setLastModifiedDate(new Date());
+        info.setUser(user);
+        return saveUserInfo(info, name, nation, age, political, nativePlace, university, major, education, birthDay, address, tel, email, wx, qq, iCard, selfEvaluation);
     }
 
     @Override
-    public Label createLabel(String name, String code, String remark) {
-        Label label = new Label();
-        label.setCreatedDate(new Date());
-        label.setLastModifiedDate(new Date());
-        label.setName(name);
-        label.setCode(code);
-        label.setRemark(remark);
-        label = labelRepository.save(label);
-        return label;
+    public UserInfo findUserInfoById(String id) {
+        return userInfoRepository.find(id);
     }
 
     @Override
-    public List<Label> findAllLabels() {
-        return labelRepository.findAll();
+    public UserInfo modifyUserInfo(UserInfo userInfo, String name, String nation, int age, String political, String nativePlace, String university, String major, String education, String birthDay, String address, long tel, String email, String wx, String qq, String iCard, String selfEvaluation) {
+        userInfo.setLastModifiedDate(new Date());
+        return saveUserInfo(userInfo, name, nation, age, political, nativePlace, university, major, education, birthDay, address, tel, email, wx, qq, iCard, selfEvaluation);
     }
 
     @Override
-    public Label findLabelById(String id) {
-        return labelRepository.find(id);
+    public UserInfo findUserInfoByUserId(String id) {
+        return userInfoRepository.findUserInfoByUserId(id);
     }
 
     @Override
-    public void deleteLabel(Label label) {
-        labelRepository.delete(label);
+    public List<UserTrain> findUserTrainByUserId(String id) {
+        return userTrainRepository.findUserTrainByUserId(id);
     }
 
     @Override
-    public List<Label> findLabelByIds(String[] labelIds) {
-        return labelRepository.findByIds(labelIds);
+    public List<UserWork> findUserWorkByUserId(String userId) {
+        return userWorkRepository.findUserWorkByUserId(userId);
     }
 
-    @Override
-    public UserLabel findUserLabelByUserIdAndLabelId(String userId, String labelId) {
-        return userLabelRepository.findUserLabelByUserIdAndLabelId(userId, labelId);
-    }
-
-    @Override
-    public void delUserLabel(UserLabel userLabel) {
-        userLabelRepository.delete(userLabel);
+    private UserInfo saveUserInfo(UserInfo userInfo, String name, String nation, int age, String political, String nativePlace, String university, String major, String education, String birthDay, String address, long tel, String email, String wx, String qq, String iCard, String selfEvaluation) {
+        userInfo.setName(name);
+        userInfo.setNation(nation);
+        userInfo.setAddress(address);
+        userInfo.setAge(age);
+        userInfo.setPolitical(political);
+        userInfo.setNativePlace(nativePlace);
+        userInfo.setUniversity(university);
+        userInfo.setMajor(major);
+        userInfo.setEducation(education);
+        userInfo.setBirthDay(birthDay);
+        userInfo.setTel(tel);
+        userInfo.setEmail(email);
+        userInfo.setWx(wx);
+        userInfo.setQq(qq);
+        userInfo.setiCard(iCard);
+        userInfo.setSelfEvaluation(selfEvaluation);
+        userInfo = userInfoRepository.save(userInfo);
+        return userInfo;
     }
 }

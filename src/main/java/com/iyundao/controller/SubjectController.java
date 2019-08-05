@@ -82,7 +82,7 @@ public class SubjectController extends BaseController {
         JSONArray arr = new JSONArray();
         for (Subject s :subjects){
             s.setUserRelations(null);
-            JSONObject json =JsonUtils.getJson(s);
+            JSONObject json =getJson(s);
             json.put("code", s.getCode());
             json.put("name", s.getName());
             json.put("type", s.getSubjectType().getName());
@@ -386,7 +386,7 @@ public class SubjectController extends BaseController {
      */
     private JSONObject converType(Subject subject) {
         try {
-            JSONObject json = new JSONObject(JsonUtils.getJson(subject));
+            JSONObject json = new JSONObject(getJson(subject));
             switch (subject.getSubjectType().ordinal()) {
                 case 0 :
                     json.put("subjectType", "总院");
@@ -405,7 +405,7 @@ public class SubjectController extends BaseController {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return JsonUtils.getJson(subject);
+        return getJson(subject);
     }
 
 }

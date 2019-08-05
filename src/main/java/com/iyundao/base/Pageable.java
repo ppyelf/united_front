@@ -47,7 +47,7 @@ public class Pageable implements Serializable {
 	/**
 	 * 搜索属性
 	 */
-	private String searchProperty;
+	private String searchKey;
 
 	/**
 	 * 搜索值
@@ -135,26 +135,15 @@ public class Pageable implements Serializable {
 		this.pageSize = pageSize;
 	}
 
-	/**
-	 * 获取搜索属性
-	 * 
-	 * @return 搜索属性
-	 */
-	public String getSearchProperty() {
-		return searchProperty;
-	}
+    public String getSearchKey() {
+        return searchKey;
+    }
 
-	/**
-	 * 设置搜索属性
-	 * 
-	 * @param searchProperty
-	 *            搜索属性
-	 */
-	public void setSearchProperty(String searchProperty) {
-		this.searchProperty = searchProperty;
-	}
+    public void setSearchKey(String searchKey) {
+        this.searchKey = searchKey;
+    }
 
-	/**
+    /**
 	 * 获取搜索值
 	 * 
 	 * @return 搜索值

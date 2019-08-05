@@ -63,6 +63,12 @@ public class User extends BaseEntity<String> {
     private ACCOUNT_TYPE status;
 
     /**
+     * 个人详情
+     */
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private UserInfo userInfo;
+
+    /**
      * 用户简介
      */
     @Column(name = "REMARK", columnDefinition = "varchar(20) default '未填写'", length = 500)
@@ -242,6 +248,14 @@ public class User extends BaseEntity<String> {
 
     public void setLabels(Set<UserLabel> labels) {
         this.labels = labels;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
     /**

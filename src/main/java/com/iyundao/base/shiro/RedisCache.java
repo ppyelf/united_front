@@ -96,7 +96,6 @@ public class RedisCache<K, V> implements Cache<K, V> {
 
     @Override
     public int size() {
-        //@TODO
         return 20;
     }
 

@@ -44,6 +44,12 @@ public class Industry extends BaseEntity<String> {
     @OneToMany(mappedBy = "industry", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     private Set<UserWork> userWorks;
 
+    /**
+     * 岗位
+     */
+    @OneToMany(mappedBy = "industry", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    private Set<Position> positions;
+
     public String getCode() {
         return code;
     }
@@ -74,5 +80,13 @@ public class Industry extends BaseEntity<String> {
 
     public void setUserWorks(Set<UserWork> userWorks) {
         this.userWorks = userWorks;
+    }
+
+    public Set<Position> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(Set<Position> positions) {
+        this.positions = positions;
     }
 }

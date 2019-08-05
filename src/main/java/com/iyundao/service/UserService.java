@@ -181,58 +181,77 @@ public interface UserService {
     void deleteUserWork(UserWork work);
 
     /**
-     * 查询标签编号是否存在
-     * @param code
-     * @return
-     */
-    boolean existsLabelCode(String code);
-
-    /**
-     * 添加标签
+     * 添加用户详情
+     * @param user
      * @param name
-     * @param code
-     * @param remark
+     * @param nation
+     * @param age
+     * @param political
+     * @param nativePlace
+     * @param university
+     * @param major
+     * @param education
+     * @param birthDay
+     * @param address
+     * @param tel
+     * @param email
+     * @param wx
+     * @param qq
+     * @param iCard
+     * @param selfEvaluation
      * @return
      */
-    Label createLabel(String name, String code, String remark);
+    UserInfo saveUserInfo(User user, String name, String nation, int age, String political, String nativePlace, String university, String major, String education, String birthDay, String address, long tel, String email, String wx, String qq, String iCard, String selfEvaluation);
 
     /**
-     * 获取所有标签的集合
-     * @return
-     */
-    List<Label> findAllLabels();
-
-    /**
-     * 根据id查询标签实体集合
+     * 根据ID查询用户详情
      * @param id
      * @return
      */
-    Label findLabelById(String id);
+    UserInfo findUserInfoById(String id);
 
     /**
-     * 删除标签实体
-     * @param label
-     */
-    void deleteLabel(Label label);
-
-    /**
-     * 根据IDS查询标签集合
-     * @param labelIds
+     * 修改用户详情
+     * @param userInfo
+     * @param name
+     * @param nation
+     * @param age
+     * @param political
+     * @param nativePlace
+     * @param university
+     * @param major
+     * @param education
+     * @param birthDay
+     * @param address
+     * @param tel
+     * @param email
+     * @param wx
+     * @param qq
+     * @param iCard
+     * @param selfEvaluation
      * @return
      */
-    List<Label> findLabelByIds(String[] labelIds);
+    UserInfo modifyUserInfo(UserInfo userInfo, String name, String nation, int age, String political, String nativePlace, String university, String major, String education, String birthDay, String address, long tel, String email, String wx, String qq, String iCard, String selfEvaluation);
 
     /**
-     * 根据标签ID和用户ID查询用户标签
+     * 根据用户ID查询用户详情实体
+     * @param id
+     * @return
+     */
+    UserInfo findUserInfoByUserId(String id);
+
+    /**
+     * 查询用户培训经历集合
+     * @param id
+     * @return
+     */
+    List<UserTrain> findUserTrainByUserId(String id);
+
+    /**
+     * 查询用户工作履历集合
      * @param userId
-     * @param labelId
      * @return
      */
-    UserLabel findUserLabelByUserIdAndLabelId(String userId, String labelId);
+    List<UserWork> findUserWorkByUserId(String userId);
 
-    /**
-     * 删除用户标签
-     * @param userLabel
-     */
-    void delUserLabel(UserLabel userLabel);
 }

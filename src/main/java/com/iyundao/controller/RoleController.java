@@ -130,7 +130,7 @@ public class RoleController extends BaseController {
         role.setLastModifiedDate(new Date(System.currentTimeMillis()));
         role.setCreatedDate(new Date(System.currentTimeMillis()));
         role = roleService.save(role);
-        jsonResult.setData(JsonUtils.getJson(role));
+        jsonResult.setData(getJson(role));
         return jsonResult;
     }
 
@@ -175,7 +175,7 @@ public class RoleController extends BaseController {
             return JsonResult.paramError();
         }
         role = roleService.save(role);
-        jsonResult.setData(JsonUtils.getJson(role));
+        jsonResult.setData(getJson(role));
         return jsonResult;
     }
 

@@ -60,6 +60,6 @@ public class CurrentSubjectResolver implements HandlerMethodArgumentResolver {
                 break;
             }
         } 
-        return subject;
+        return subject == null ? null : subject;
     }
 }
