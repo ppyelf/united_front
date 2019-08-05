@@ -1,0 +1,11 @@
+{
+  "groups": [
+    {
+      "name": "",
+      "type": "com.iyundao.base.config.RedisConfig",
+      "sourceType": "com.iyundao.base.config.RedisConfig"
+    }
+  ],
+  "properties": [],
+  "hints": []
+}
