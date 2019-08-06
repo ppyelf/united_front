@@ -66,7 +66,7 @@ public class PoliticsController extends BaseController{
     * {
     *     "code": 200,
     *     "message": "成功",
-    *      "data": [{"startTime": "2018-12-12 12:12:12","id": "4028d8816c4aa85a016c4aa8913d0000","state": "unreviewed","endTime": "2019-12-1212:12:12","synopsis": "正文","title": "测试标题"},{"startTime": "2018-12-12 12:12:12","id": "4028d8816c4af660016c4b03b81d0000","state": "unreviewed","endTime": " 1212:12:12","synopsis": "正文","title": "测试标题"}]
+    *      "data": {"total": 3,"size": 2,"page": 1,"content": [{"startTime": "2018-12-12 12:12:12","id": "4028d8816c4ccccf016c4ccd43bb0000","state": "unreviewed","endTime": "2019-12-12 12:12:12","title": "测试标题","content": ""},{"startTime": "2018-12-12 12:12:12","id": "4028d8816c4ccccf016c4ccd4ea20003","state": "unreviewed","endTime": "2019-12-12 12:12:12","title": "测试标题","content": ""}]}
     * }
     */
     @PostMapping("/listPage")
@@ -81,7 +81,12 @@ public class PoliticsController extends BaseController{
                 currentPageList.add(data);
             }
         }
-        jsonResult.setData(converPolitics(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",politics.size());
+        obj.put("content",converPolitics(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 

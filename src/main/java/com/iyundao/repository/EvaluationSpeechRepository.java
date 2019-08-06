@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @ClassName: EvaluationSpeechRepository
- * @project: //todo
+ * @project:
  * @author: 13620
  * @Date: 2019/8/3
  * @Description:  言论评价

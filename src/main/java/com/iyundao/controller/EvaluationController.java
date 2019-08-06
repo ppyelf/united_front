@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.management.ObjectName;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.List;
 
 /**
  * @ClassName: EvaluationController
- * @project: //todo
+ * @project:
  * @author: 13620
  * @Date: 2019/8/3
  * @Description:  评价
@@ -97,7 +98,7 @@ public class EvaluationController extends BaseController{
     * {
     *     "code": 200,
     *     "message": "成功",
-    *     "data": [{"data": "11","beEvaluateUserCode": "11","departCode": "11","subjectCode": "11","content": "11","evaluateUserCode": "11","groupCode": "11"},]
+    *     "data": [{"data": "11","beEvaluateUserCode": "11","departCode": "11","subjectCode": "11","content": "11","evaluateUserCode": "11","groupCode": "11"}]
     * }
     */
     @PostMapping("/importEvent")
@@ -126,7 +127,7 @@ public class EvaluationController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *     "data": [{"data": "11","beEvaluateUserCode": "11","departCode": "11","subjectCode": "11","content": "11","evaluateUserCode": "11","groupCode": "11"},]
+     *      "data": {"total": 3,"size": 2,"page": 1,"content": [{"data": "11","beEvaluateUserCode": "11","departCode": "11","incident": {"code": "004","dataTime": "发生时间","id": "4028d8816c562f32016c564c8a3a0003","title": "事件003","content": "事件正文"},"subjectCode": "11","content": "11","evaluateUserCode": "11","groupCode": "11"},{"data": "22","beEvaluateUserCode": "22","departCode": "22","incident": {"code": "001","dataTime": "发生时间","id": "4028d8816c562f32016c564c33f40000","title": "事件001","content": "事件正文"},"subjectCode": "22","content": "22","evaluateUserCode": "22","groupCode": "22"}]}
      * }
      */
     @PostMapping("/listPageEvent")
@@ -135,7 +136,12 @@ public class EvaluationController extends BaseController{
 
         List<EvaluationEvent> evaluationEventList = evaluationService.findAllEvent();
         List<EvaluationEvent> currentPageList = pageEvent(evaluationEventList,page,size);
-        jsonResult.setData(converEvent(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",evaluationEventList.size());
+        obj.put("content",converEvent(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 
@@ -157,7 +163,7 @@ public class EvaluationController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *      "data": [{"data": "11","beEvaluateUserCode": "11","departCode": "11","incident": {"code": "004","dataTime": "发生时间","id": "4028d8816c562f32016c564c8a3a0003","title": "事件003","content": "事件正文"},"subjectCode": "11","content": "11","evaluateUserCode": "11","groupCode": "11"},{"data": "22","beEvaluateUserCode": "22","departCode": "22","incident": {"code": "001","dataTime": "发生时间","id": "4028d8816c562f32016c564c33f40000","title": "事件001","content": "事件正文"},"subjectCode": "22","content": "22","evaluateUserCode": "22","groupCode": "22"},{"data": "33","beEvaluateUserCode": "33","departCode": "33","incident": {"code": "003","dataTime": "发生时间","id": "4028d8816c562f32016c564c880f0002","title": "事件002","content": "事件正文"},"subjectCode": "33","content": "33","evaluateUserCode": "33","groupCode": "33"}]
+     *       "data": {"total": 3,"size": 10,"page": 1,"content": [{"data": "11","beEvaluateUserCode": "11","departCode": "11","incident": {"code": "004","dataTime": "发生时间","id": "4028d8816c562f32016c564c8a3a0003","title": "事件003","content": "事件正文"},"subjectCode": "11","content": "11","evaluateUserCode": "11","groupCode": "11"},{"data": "22","beEvaluateUserCode": "22","departCode": "22","incident": {"code": "001","dataTime": "发生时间","id": "4028d8816c562f32016c564c33f40000","title": "事件001","content": "事件正文"},"subjectCode": "22","content": "22","evaluateUserCode": "22","groupCode": "22"},{"data": "33","beEvaluateUserCode": "33","departCode": "33","incident": {"code": "003","dataTime": "发生时间","id": "4028d8816c562f32016c564c880f0002","title": "事件002","content": "事件正文"},"subjectCode": "33","content": "33","evaluateUserCode": "33","groupCode": "33"}]}
      * }
      */
     @PostMapping("/searchEvent")
@@ -166,7 +172,12 @@ public class EvaluationController extends BaseController{
                                   @RequestParam(defaultValue = "10")int size){
         List<EvaluationEvent> evaluationEventList = evaluationService.findAllByLikeIncidentTitle(likeIncidentTitle);
         List<EvaluationEvent> currentPageList = pageEvent(evaluationEventList,page,size);
-        jsonResult.setData(converEvent(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",evaluationEventList.size());
+        obj.put("content",converEvent(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 
@@ -214,7 +225,7 @@ public class EvaluationController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *      "data": [{"score": 11,"timeHorizon": "11","data": "11","departCode": "11","subjectCode": "11","content": "11","userCode": "11","groupCode": "11"},{"score": 22,"timeHorizon": "22","data": "22","departCode": "22","subjectCode": "22","content": "22","userCode": "22","groupCode": "22"},]
+     *      "data": [{"score": 11,"timeHorizon": "11","data": "11","departCode": "11","subjectCode": "11","content": "11","userCode": "11","groupCode": "11"},{"score": 22,"timeHorizon": "22","data": "22","departCode": "22","subjectCode": "22","content": "22","userCode": "22","groupCode": "22"}]
      * }
      */
     @PostMapping("/importOrganize")
@@ -243,7 +254,7 @@ public class EvaluationController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *      "data": [{"score": 33,"timeHorizon": "33","data": "33","departCode": "33","subjectCode": "33","content": "33","userCode": "33","groupCode": "33"}]
+     *       "data": {"total": 3,"size": 2,"page": 2,"content": [{"score": 33,"timeHorizon": "33","data": "33","depart": {"code": "1","name": "2321","id": "123"},"subjectCode": "33","content": "33","userCode": "33","groupCode": "33"}]}
      * }
      */
     @PostMapping("/listPageOrganize")
@@ -251,7 +262,12 @@ public class EvaluationController extends BaseController{
                                        @RequestParam(defaultValue = "10")int size){
         List<EvaluationOrganize> evaluationOrganizeList = evaluationService.findAllOrganize();
         List<EvaluationOrganize> currentPageList = pageOrganize(evaluationOrganizeList,page,size);
-        jsonResult.setData(converOrganize(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",evaluationOrganizeList.size());
+        obj.put("content",converOrganize(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 
@@ -276,7 +292,7 @@ public class EvaluationController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *       "data": [{"score": 11,"timeHorizon": "11","data": "11","subject": {"code": "1","name": "测试机构1","id": "402881916b9d3031016b9d626593000c","subjectType": "part"},"depart": {"code": "1","name": "2321","id": "123"},"content": "11","userCode": "11","group": {"code": "0","name": "测试组织1","remark": "","id": "402881916b9d3031016b9d63a172000d"}}
+     *       "data": {"total": 2,"size": 10,"page": 1,"content": [{"score": 11,"timeHorizon": "11","data": "11","subject": {"code": "1","name": "测试机构1","id": "402881916b9d3031016b9d626593000c","subjectType": "part"},"depart": {"code": "1","name": "2321","id": "123"},"content": "11","userCode": "11","group": {"code": "0","name": "测试组织1","remark": "","id": "402881916b9d3031016b9d63a172000d"}},{"score": 22,"timeHorizon": "22","data": "22","subject": {"code": "1","name": "测试机构1","id": "402881916b9d3031016b9d626593000c","subjectType": "part"},"departCode": "22","content": "22","userCode": "22","group": {"code": "0","name": "测试组织1","remark": "","id": "402881916b9d3031016b9d63a172000d"}}]}
      * }
      */
     @PostMapping("/searchOrganize")
@@ -299,7 +315,12 @@ public class EvaluationController extends BaseController{
                 return JsonResult.paramError("类型输入有误");
         }
         List<EvaluationOrganize> currentPageList = pageOrganize(eo,page,size);
-        jsonResult.setData(converOrganize(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",eo.size());
+        obj.put("content",converOrganize(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 
@@ -347,7 +368,7 @@ public class EvaluationController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *      "data": [{"score": 11,"timeHorizon": "11","data": "11","beEvaluateUserCode": "11","content": "11","evaluateUserCode": "11"},]
+     *      "data": [{"score": 11,"timeHorizon": "11","data": "11","beEvaluateUserCode": "11","content": "11","evaluateUserCode": "11"}]
      * }
      */
     @PostMapping("/importSelf")
@@ -377,7 +398,7 @@ public class EvaluationController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *       "data": [{"score": 11,"timeHorizon": "11","data": "11","subject": {"code": "1","name": "测试机构1","id": "402881916b9d3031016b9d626593000c","subjectType": "part"},"depart": {"code": "1","name": "2321","id": "123"},"content": "11","userCode": "11","group": {"code": "0","name": "测试组织1","remark": "","id": "402881916b9d3031016b9d63a172000d"}}]
+     *       "data": {"total": 3,"size": 2,"page": 1,"content": [{"score": 11,"timeHorizon": "11","data": "11","subject": {"code": "1","name": "测试机构1","id": "402881916b9d3031016b9d626593000c","subjectType": "part"},"depart": {"code": "1","name": "2321","id": "123"},"content": "11","userCode": "11","group": {"code": "0","name": "测试组织1","remark": "","id": "402881916b9d3031016b9d63a172000d"}},{"score": 22,"timeHorizon": "22","data": "22","subject": {"code": "1","name": "测试机构1","id": "402881916b9d3031016b9d626593000c","subjectType": "part"},"departCode": "22","content": "22","userCode": "22","group": {"code": "0","name": "测试组织1","remark": "","id": "402881916b9d3031016b9d63a172000d"}}]}
      * }
      */
     @PostMapping("/listPageSelf")
@@ -385,7 +406,12 @@ public class EvaluationController extends BaseController{
                                    @RequestParam(defaultValue = "10")int size){
         List<EvaluationSelf> evaluationSelfList = evaluationService.findAllSelf();
         List<EvaluationSelf> currentPageList = pageSelt(evaluationSelfList,page,size);
-        jsonResult.setData(converSelf(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",evaluationSelfList.size());
+        obj.put("content",converSelf(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 
@@ -408,7 +434,7 @@ public class EvaluationController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *      "data": [{"score": 11,"timeHorizon": "11","data": "11","beEvaluateUserCode": "11","evaluateUser": {"password": "6A36E430976A64EA","code": "001","salt": "45a1d914886d4a92b6835a181b2a20d8","sex": "0","name": "钱正","remark": "未填写","id": "402881916ba10b8a016ba113adbc0006","account": "user","status": "normal"},"content": "11"}]
+     *     "data": {"total": 1,"size": 10,"page": 1,"content": [{"score": 11,"timeHorizon": "11","data": "11","beEvaluateUserCode": "11","evaluateUser": {"password": "6A36E430976A64EA","code": "001","salt": "45a1d914886d4a92b6835a181b2a20d8","sex": "0","name": "钱正","remark": "未填写","id": "402881916ba10b8a016ba113adbc0006","account": "user","status": "normal"},"content": "11"}]}
      * }
      */
     @PostMapping("/searchSelf")
@@ -417,7 +443,12 @@ public class EvaluationController extends BaseController{
                                  @RequestParam(defaultValue = "10")int size){
         List<EvaluationSelf> evaluationSelfList = evaluationService.findAllSelfByUserName(likeName);
         List<EvaluationSelf> currentPageList = pageSelt(evaluationSelfList,page,size);
-        jsonResult.setData(converSelf(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",evaluationSelfList.size());
+        obj.put("content",converSelf(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 
@@ -495,7 +526,7 @@ public class EvaluationController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *      "data": [{"speechStudyCode": "11","data": "11","speechDiscussionCode": "11","content": "11","userCode": "11","speechArticleCode": "11"},{"speechStudyCode": "22","data": "22","speechDiscussionCode": "22","content": "22","userCode": "22","speechArticleCode": "22"}]
+     *       "data": {"total": 3,"size": 2,"page": 1,"content": [{"speechStudyCode": "001","data": "11","speechDiscussion": {"code": "001","id": "","time": "","title": "标题11","content": ""},"content": "11","userCode": "11","speechArticleCode": "001"},{"speechStudyCode": "22","data": "22","speechDiscussion": {"code": "001","id": "","time": "","title": "标题11","content": ""},"content": "22","userCode": "22","speechArticleCode": "002"}]}
      * }
      */
     @PostMapping("/listPageSpeech")
@@ -503,7 +534,12 @@ public class EvaluationController extends BaseController{
                                      @RequestParam(defaultValue = "10")int size){
         List<EvaluationSpeech> evaluationSpeechList = evaluationService.findAllSpeech();
         List<EvaluationSpeech> currentPageList = pageEvaluationSpeech(evaluationSpeechList,page,size);
-        jsonResult.setData(converSpeech(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",evaluationSpeechList.size());
+        obj.put("content",converSpeech(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 
@@ -527,7 +563,7 @@ public class EvaluationController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *        "data": [{"data": "11","speechStudy": {"result": "结果","code": "001","startTime": "2018.12.12 12:12:12","id": "4028d8816c551b7e016c5527f4bb0002","state": "notStarted","endTime": "2018.12.12 12:12:12","title": "标题11","content": "正文"},"speechDiscussion": {"code": "001","id": "","time": "","title": "标题11","content": ""},"content": "11","userCode": "11","speechArticle": {"code": "001","id": "4028d8816c51747c016c519f6eb70004","time": "2018.12.12 12:12:12","sort": "1","title": "标题11","url": "路径","content": "正文"}}]
+     *     "data": {"total": 0,"size": 10,"page": 1,"content": []}
      * }
      */
     @PostMapping("/searchSpeech")
@@ -550,7 +586,12 @@ public class EvaluationController extends BaseController{
                 return JsonResult.paramError("类型只能选择0,1,2");
         }
         List<EvaluationSpeech> currentPageList = pageEvaluationSpeech(es,page,size);
-        jsonResult.setData(converSpeech(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",es.size());
+        obj.put("content",converSpeech(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 

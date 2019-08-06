@@ -146,6 +146,31 @@ public class User extends BaseEntity<String> {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ScoreUser> scoreUser;
 
+    /**
+     * 现场文字
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ActivityText> activityText;
+
+    /**
+     * 活动小视频
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ActivityVideo> activityVideo;
+
+    /**
+     * 活动小视频
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ActivityFrequency> activityFrequencies;
+
+    /**
+     * 活动图片
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ActivityImage> activityImage;
+
+
 
 
     public String getAccount() {
@@ -308,7 +333,45 @@ public class User extends BaseEntity<String> {
         this.scoreUser = scoreUser;
     }
 
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
 
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public Set<ActivityText> getActivityText() {
+        return activityText;
+    }
+
+    public void setActivityText(Set<ActivityText> activityText) {
+        this.activityText = activityText;
+    }
+
+    public Set<ActivityVideo> getActivityVideo() {
+        return activityVideo;
+    }
+
+    public void setActivityVideo(Set<ActivityVideo> activityVideo) {
+        this.activityVideo = activityVideo;
+    }
+
+    public Set<ActivityFrequency> getActivityFrequencies() {
+        return activityFrequencies;
+    }
+
+    public void setActivityFrequencies(Set<ActivityFrequency> activityFrequencies) {
+        this.activityFrequencies = activityFrequencies;
+    }
+
+    public Set<ActivityImage> getActivityImage() {
+        return activityImage;
+    }
+
+    public void setActivityImage(Set<ActivityImage> activityImage) {
+        this.activityImage = activityImage;
+    }
 
     /**
      * 账号类型

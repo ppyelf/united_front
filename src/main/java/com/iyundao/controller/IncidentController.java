@@ -21,10 +21,10 @@ import java.util.List;
 
 /**
  * @ClassName: IncidentController
- * @project: //todo
+ * @project: //
  * @author: 13620
  * @Date: 2019/8/3
- * @Description:
+ * @Description:    事件
  * @Version: V1.0
  */
 @RestController
@@ -51,7 +51,7 @@ public class IncidentController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *      "data": [{"dataTime": "发生时间","id": "4028d8816c562f32016c564c33f40000","title": "事件标题","content": "事件正文"},{"dataTime": "发生时间","id": "4028d8816c562f32016c564c72a80001","title": "事件标题","content": "事件正文"}]
+     *       "data": {"total": 4,"size": 2,"page": 1,"content": [{"code": "001","dataTime": "发生时间","id": "4028d8816c562f32016c564c33f40000","title": "事件001","content": "事件正文"},{"code": "002","dataTime": "发生时间","id": "4028d8816c562f32016c564c72a80001","title": "事件002","content": "事件正文"}]}
      * }
      */
     @PostMapping("/page")
@@ -59,7 +59,12 @@ public class IncidentController extends BaseController{
                            @RequestParam(defaultValue = "10")int size){
         List<Incident> incidentList =   incidentService.findAll();
         List<Incident> currentPageList = pageIncident(incidentList,page,size);
-        jsonResult.setData(converIncident(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",incidentList.size());
+        obj.put("content",converIncident(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 

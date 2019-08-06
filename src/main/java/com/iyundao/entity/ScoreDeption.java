@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 /**
  * @ClassName: ScoreDeption
- * @project: //todo
+ * @project:
  * @author: 13620
  * @Date: 2019/8/3
  * @Description:

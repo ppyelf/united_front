@@ -1,5 +1,6 @@
 package com.iyundao.repository;
 
+import com.iyundao.entity.Activity;
 import com.iyundao.entity.ActivityImage;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -25,4 +26,11 @@ public interface ActivityImageRepository extends CrudRepository<ActivityImage, S
     //根据活动ID获取集合信息
     @Query("select ai from ActivityImage ai where ai.activity.id = ?1")
     List<ActivityImage> findByActivityId(String id);
+
+    @Query("select ai from ActivityImage ai order by ai.lastModifiedDate desc")
+    List<ActivityImage> findAllDesc();
+
+    //根据实体找到所有图片
+    @Query("select ai from ActivityImage ai where ai.activity = ?1 order by ai.lastModifiedDate desc")
+    List<ActivityImage> findAllImageByActivity(Activity activity);
 }

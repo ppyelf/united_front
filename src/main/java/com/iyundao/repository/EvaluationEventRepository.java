@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @ClassName: EvaluationEventRepository
- * @project: //todo
+ * @project:
  * @author: 13620
  * @Date: 2019/8/5
  * @Description: 事件评价

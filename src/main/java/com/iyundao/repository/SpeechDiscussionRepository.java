@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @ClassName: SpeechDiscussionRepository
- * @project: //todo
+ * @project:
  * @author: 13620
  * @Date: 2019/8/3
  * @Description:  参与讨论信息

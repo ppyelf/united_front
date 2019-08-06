@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 /**
  * @ClassName: EvaluationSelf
- * @project: //todo
+ * @project:
  * @author: 13620
  * @Date: 2019/8/3
  * @Description:  个人评价

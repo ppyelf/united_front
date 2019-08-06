@@ -1,16 +1,22 @@
 package com.iyundao.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.iyundao.base.Page;
 import com.iyundao.base.Pageable;
+import com.iyundao.base.utils.FileUtils;
+import com.iyundao.base.utils.JsonResult;
+import com.iyundao.base.utils.JsonUtils;
 import com.iyundao.entity.*;
 import com.iyundao.repository.*;
 import com.iyundao.service.ActivityService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -25,6 +31,9 @@ import java.util.*;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ActivityServiceImpl implements ActivityService {
+
+    @Value("${server.upload}")
+    private String uploadPath;
 
     @Autowired
     private ActivityRepository activityRepository;
@@ -49,6 +58,15 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
     private SignRepository signRepository;
+
+    @Autowired
+    private ActivityFrequencyRepository activityFrequencyRepository;
+
+    @Autowired
+    private ActivityVideoRepository activityVideoRepository;
+
+    @Autowired
+    private ActivityTextRepository activityTextRepository;
 
     @Override
     @Modifying
@@ -180,6 +198,170 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public ActivityFile findByIds(String id) {
         return activityFileRepository.find(id);
+    }
+
+    @Override
+    public JsonResult saveFrequency(MultipartFile file, User user, Activity activity) {
+        ActivityFrequency af = new ActivityFrequency();
+        af.setCreatedDate(new Date());
+        af.setLastModifiedDate(new Date());
+        af.setUser(user);
+        af.setActivity(activity);
+        Map<String,String> map = FileUtils.uploadFile(file,af,uploadPath);
+        if (map == null){
+            return JsonResult.failure(601,"上传失败");
+        }
+        af.setUrl(map.get("url"));
+        af.setSuffix(map.get("suffix"));
+        af.setName(map.get("name"));
+        af = activityFrequencyRepository.save(af);
+        JsonResult jsonResult = JsonResult.success();
+        jsonResult.setData(JsonUtils.getJson(af));
+
+        return jsonResult;
+    }
+
+    @Override
+    public List<ActivityFrequency> findAllFrequency() {
+        return activityFrequencyRepository.findAllDesc();
+    }
+
+    @Override
+    public List<ActivityFrequency> findAllFrequencyByActivity(Activity activity) {
+        return activityFrequencyRepository.findAllFrequencyByActivity(activity);
+    }
+
+    @Override
+    public List<ActivityFrequency> findAllFrequencyByIds(String[] frequencyIds) {
+        return activityFrequencyRepository.findByIds(frequencyIds);
+    }
+
+    @Override
+    public void deleteFrequencys(List<ActivityFrequency> af) {
+        for (ActivityFrequency activityFrequency : af) {
+            FileUtils.deleteFile(uploadPath + activityFrequency.getUrl());
+            activityFrequencyRepository.delete(activityFrequency);
+        }
+    }
+
+    @Override
+    public JsonResult saveImageWang(MultipartFile file, User user, Activity activity) {
+        ActivityImage ai = new ActivityImage();
+        ai.setCreatedDate(new Date());
+        ai.setLastModifiedDate(new Date());
+        ai.setUser(user);
+        ai.setActivity(activity);
+        Map<String,String> map = FileUtils.uploadFile(file,ai,uploadPath);
+        if (map == null){
+            return JsonResult.failure(601,"上传失败");
+        }
+        ai.setUrl(map.get("url"));
+        ai.setSuffix(map.get("suffix"));
+        ai.setName(map.get("name"));
+        ai = activityImageRepository.save(ai);
+        JsonResult jsonResult = JsonResult.success();
+        jsonResult.setData(JsonUtils.getJson(ai));
+
+        return jsonResult;
+    }
+
+    @Override
+    public List<ActivityImage> findAllImage() {
+        return activityImageRepository.findAllDesc();
+    }
+
+    @Override
+    public List<ActivityImage> findAllImageByActivity(Activity activity) {
+        return activityImageRepository.findAllImageByActivity(activity);
+    }
+
+    @Override
+    public List<ActivityImage> findAllImageByIds(String[] imageIds) {
+        return activityImageRepository.findByIds(imageIds);
+    }
+
+    @Override
+    public void deleteImages(List<ActivityImage> ai) {
+        for (ActivityImage activityImage : ai) {
+            FileUtils.deleteFile(uploadPath + activityImage.getUrl());
+            activityImageRepository.delete(activityImage);
+        }
+    }
+
+    @Override
+    public JsonResult saveVideo(MultipartFile file, User user, Activity activity) {
+        ActivityVideo av = new ActivityVideo();
+        av.setCreatedDate(new Date());
+        av.setLastModifiedDate(new Date());
+        av.setUser(user);
+        av.setActivity(activity);
+        Map<String,String> map = FileUtils.uploadFile(file,av,uploadPath);
+        if (map == null){
+            return JsonResult.failure(601,"上传失败");
+        }
+        av.setUrl(map.get("url"));
+        av.setSuffix(map.get("suffix"));
+        av.setName(map.get("name"));
+        av = activityVideoRepository.save(av);
+        JsonResult jsonResult = JsonResult.success();
+        jsonResult.setData(JsonUtils.getJson(av));
+        return jsonResult;
+    }
+
+    @Override
+    public List<ActivityVideo> findAllVideo() {
+        return activityVideoRepository.findAllVideo();
+    }
+
+    @Override
+    public List<ActivityVideo> findAllVideoByActivity(Activity activity) {
+        return activityVideoRepository.findAllVideoByActivity(activity);
+    }
+
+    @Override
+    public List<ActivityVideo> findAllVideoByIds(String[] videoIds) {
+        return activityVideoRepository.findByIds(videoIds);
+    }
+
+    @Override
+    public void deleteVideo(List<ActivityVideo> activityVideoList) {
+        for (ActivityVideo activityVideo : activityVideoList) {
+            FileUtils.deleteFile(uploadPath + activityVideo.getUrl());
+            activityVideoRepository.delete(activityVideo);
+        }
+    }
+
+    @Override
+    public ActivityText saveText(String content, User user, Activity activity) {
+        ActivityText at = new ActivityText();
+        at.setCreatedDate(new Date());
+        at.setLastModifiedDate(new Date());
+        at.setContent(content);
+        at.setUser(user);
+        at.setActivity(activity);
+        at= activityTextRepository.save(at);
+
+        return at;
+    }
+
+    @Override
+    public List<ActivityText> findAllText() {
+        return activityTextRepository.findAllText();
+    }
+
+    @Override
+    public List<ActivityText> findAllTextByActivity(Activity activity) {
+        return activityTextRepository.findAllTextByActivity(activity);
+    }
+
+    @Override
+    public List<ActivityText> findAllTextByIds(String[] textIds) {
+        return activityTextRepository.findByIds(textIds);
+    }
+
+    @Override
+    public void deleteText(List<ActivityText> at) {
+        activityTextRepository.deleteAll(at);
     }
 
 

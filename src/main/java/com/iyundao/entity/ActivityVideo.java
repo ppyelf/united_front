@@ -5,18 +5,19 @@ import com.iyundao.base.BaseEntity;
 import javax.persistence.*;
 
 /**
- * @ClassName: ActivityImage
- * @project: ayundao
- * @author: 念
- * @Date: 2019/6/5 8:48
- * @Description: 实体 - 活动图片
- * @Version: V2.0
+ * @ClassName: ActivityVideo
+ * @project:
+ * @author: 13620
+ * @Date: 2019/8/6
+ * @Description:   活动小视频
+ * @Version: V1.0
  */
 @Entity
-@Table(name = "t_activity_image")
-public class ActivityImage extends BaseEntity<String> {
+@Table(name = "t_activity_video")
+public class ActivityVideo extends BaseEntity<String>{
 
-    private final static long serialVersionUID = -13274981793471984L;
+    private static final long serialVersionUID = 2697678284475943731L;
+
 
     /**
      * 名称
@@ -27,20 +28,15 @@ public class ActivityImage extends BaseEntity<String> {
     /**
      * url
      */
-    @Column(name = "URL", nullable = false, length = 100)
+    @Column(name = "URL", length = 100)
     private String url;
 
     /**
      * 后缀名
      */
-    @Column(name = "SUFFIX", nullable = false, length = 4)
+    @Column(name = "SUFFIX", length = 4)
     private String suffix;
 
-    /**
-     * 浏览次数
-     */
-    @Column(name = "HOTS", columnDefinition = "tinyint default 0")
-    private int hots;
 
     /**
      * 发表人
@@ -49,11 +45,10 @@ public class ActivityImage extends BaseEntity<String> {
     @JoinColumn(name = "USERID")
     private User user;
 
-
     /**
      * 所属活动
      */
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ACTIVITYID")
     private Activity activity;
 
@@ -81,12 +76,12 @@ public class ActivityImage extends BaseEntity<String> {
         this.suffix = suffix;
     }
 
-    public int getHots() {
-        return hots;
+    public User getUser() {
+        return user;
     }
 
-    public void setHots(int hots) {
-        this.hots = hots;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Activity getActivity() {
@@ -95,13 +90,5 @@ public class ActivityImage extends BaseEntity<String> {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }

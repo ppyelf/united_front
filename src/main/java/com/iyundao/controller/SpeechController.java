@@ -61,7 +61,7 @@ public class SpeechController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *       "data": [{"id": "4028d8816c51747c016c519f6eb70004","time": "2018.12.12 12:12:12","sort": "1","title": "标题","userName": "001","userId": "402881916ba10b8a016ba113adbc0006","content": "正文","url": "路径"}]
+     *        "data": {"total": 1,"size": 10,"page": 1,"content": [{"code": "","id": "4028d8816c663e68016c666afed00000","time": "2018.12.12 12:12:12","sort": "1","title": "标题","userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006","url": "路径"}]}
      * }
      */
     @PostMapping("/listPageArticles")
@@ -69,7 +69,12 @@ public class SpeechController extends BaseController{
                                @RequestParam(defaultValue = "10")int size){
         List<SpeechArticle> speechArticles = speechService.findAllSpeechArticle();
         List<SpeechArticle>  currentPageList = pageSpeechArticle(speechArticles,page,size);
-        jsonResult.setData(converSpeechArticle(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",speechArticles.size());
+        obj.put("content",converSpeechArticle(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 
@@ -92,7 +97,7 @@ public class SpeechController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *        "data": [{"id": "4028d8816c51747c016c519f6eb70004","time": "2018.12.12 12:12:12","sort": "1","title": "标题","userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006","content": "正文","url": "路径"},{"id": "4028d8816c51aa6f016c51b799ef0000","time": "2018.12.12 12:12:12","sort": "1","title": "标题","userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006","content": "正文","url": "路径"}]
+     *         "data": {"total": 1,"size": 10,"page": 1,"content": [{"code": "","id": "4028d8816c663e68016c666afed00000","time": "2018.12.12 12:12:12","sort": "1","title": "标题","userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006","url": "路径"}]}
      * }
      */
     @PostMapping("/listPageArticlesByUserId")
@@ -105,7 +110,12 @@ public class SpeechController extends BaseController{
         }
         List<SpeechArticle> speechArticles = speechService.findAllSpeechArticleByUser(user);
         List<SpeechArticle> currentPageList = pageSpeechArticle(speechArticles,page,size);
-        jsonResult.setData(converSpeechArticle(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",speechArticles.size());
+        obj.put("content",converSpeechArticle(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
 
     }
@@ -234,7 +244,7 @@ public class SpeechController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *      "data": [{"result": "结果","startTime": "2018.12.12 12:12:12","id": "4028d8816c551b7e016c5527f4bb0002","state": "notStarted","endTime": "2018.12.12 12:12:12","title": "标题","userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006","content": "正文"},{"result": "结果","startTime": "2018.12.12 12:12:12","id": "4028d8816c551b7e016c5527f76a0003","state": "notStarted","endTime": "2018.12.12 12:12:12","title": "标题","userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006","content": "正文"}]
+     *        "data": {"total": 1,"size": 10,"page": 1,"content": [{"result": "结果","code": "","startTime": "2018.12.12 12:12:12","id": "4028d8816c663e68016c666d27ae0002","state": "notStarted","endTime": "2018.12.12 12:12:12","title": "标题","userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006"}]}
      * }
      */
     @PostMapping("/listPageStudy")
@@ -242,7 +252,12 @@ public class SpeechController extends BaseController{
                                     @RequestParam(defaultValue = "10")int size){
             List<SpeechStudy> speechStudies = speechService.findAllSpeechStudy();
             List<SpeechStudy> currentPageList = pageSpeechStudy(speechStudies,page,size);
-            jsonResult.setData(converSpeechStudy(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",speechStudies.size());
+        obj.put("content",converSpeechStudy(currentPageList));
+            jsonResult.setData(obj);
             return jsonResult;
     }
 
@@ -264,7 +279,7 @@ public class SpeechController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *        "data": [{"result": "结果","startTime": "2018.12.12 12:12:12","id": "4028d8816c551b7e016c5527f4bb0002","state": "notStarted","endTime": "2018.12.12 12:12:12","title": "标题","userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006","content": "正文"},{"result": "结果","startTime": "2018.12.12 12:12:12","id": "4028d8816c551b7e016c5527f76a0003","state": "notStarted","endTime": "2018.12.12 12:12:12","title": "标题","userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006","content": "正文"}]
+     *        "data": {"total": 1,"size": 10,"page": 1,"content": [{"result": "结果","code": "","startTime": "2018.12.12 12:12:12","id": "4028d8816c663e68016c666d27ae0002","state": "notStarted","endTime": "2018.12.12 12:12:12","title": "标题","userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006"}]}
      * }
      */
     @PostMapping("/listPageStudyByUserId")
@@ -277,7 +292,12 @@ public class SpeechController extends BaseController{
         }
         List<SpeechStudy> speechStudies = speechService.findAllSpeechStudyByUser(user);
         List<SpeechStudy> currentPageList = pageSpeechStudy(speechStudies,page,size);
-        jsonResult.setData(converSpeechStudy(currentPageList));
+        JSONObject obj = new JSONObject();
+        obj.put("page",page);
+        obj.put("size",size);
+        obj.put("total",speechStudies.size());
+        obj.put("content",converSpeechStudy(currentPageList));
+        jsonResult.setData(obj);
         return jsonResult;
     }
 
@@ -298,7 +318,7 @@ public class SpeechController extends BaseController{
      * {
      *     "code": 200,
      *     "message": "成功",
-     *       "data": {"result": "结果","startTime": "2018.12.12 12:12:12","id": "4028d8816c551b7e016c5527f4bb0002","state": "notStarted","endTime": "2018.12.12 12:12:12","title": "标题""userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006","content": "正文"}
+     *       "data": { "result": "结果","startTime": "2018.12.12 12:12:12","id": "4028d8816c551b7e016c5527f4bb0002","state": "notStarted","endTime": "2018.12.12 12:12:12","title": "标题","userName": "钱正","userId": "402881916ba10b8a016ba113adbc0006","content": "正文" }
      * }
      */
     @PostMapping("/viewStudy")

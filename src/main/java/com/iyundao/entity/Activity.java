@@ -92,6 +92,24 @@ public class Activity extends BaseEntity<String> {
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ReleaseGroups> releaseGroups;
 
+    /**
+     * 现场文字
+     */
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ActivityText> activityText;
+
+    /**
+     * 现场小视频
+     */
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ActivityVideo> activityVideo;
+
+    /**
+     * 音频文件
+     */
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ActivityFrequency> activityFrequencies;
+
     public String getName() {
         return name;
     }
@@ -186,6 +204,30 @@ public class Activity extends BaseEntity<String> {
 
     public void setActivityImages(Set<ActivityImage> activityImages) {
         this.activityImages = activityImages;
+    }
+
+    public Set<ActivityText> getActivityText() {
+        return activityText;
+    }
+
+    public void setActivityText(Set<ActivityText> activityText) {
+        this.activityText = activityText;
+    }
+
+    public Set<ActivityVideo> getActivityVideo() {
+        return activityVideo;
+    }
+
+    public void setActivityVideo(Set<ActivityVideo> activityVideo) {
+        this.activityVideo = activityVideo;
+    }
+
+    public Set<ActivityFrequency> getActivityFrequencies() {
+        return activityFrequencies;
+    }
+
+    public void setActivityFrequencies(Set<ActivityFrequency> activityFrequencies) {
+        this.activityFrequencies = activityFrequencies;
     }
 
     public enum ACTIVITY_TYPE{
