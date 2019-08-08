@@ -37,7 +37,7 @@ public class EvaluationSpeech extends BaseEntity<String>{
     /**
      * 评价人
      */
-    @Excel(name = "评价人", sort = 2)
+    @Excel(name = "评价人code", sort = 2)
    @Column(name = "USERCODE")
    private String userCode;
 
@@ -45,14 +45,14 @@ public class EvaluationSpeech extends BaseEntity<String>{
     /**
      * 文章code
      */
-    @Excel(name = "评价详情", sort = 3)
+    @Excel(name = "文章code", sort = 3)
     @Column(name = "SPEECHARTICLECODE")
     private String speechArticleCode;
 
     /**
      * 参与讨论信息code
      */
-    @Excel(name = "评价详情", sort = 4)
+    @Excel(name = "参与讨论信息code", sort = 4)
     @Column(name = "SPEECHDISCUSSIONCODE")
     private String speechDiscussionCode;
 
@@ -60,7 +60,7 @@ public class EvaluationSpeech extends BaseEntity<String>{
     /**
      *理论研究code
      */
-    @Excel(name = "评价详情", sort = 5)
+    @Excel(name = "理论研究code", sort = 5)
     @Column(name = "SPEECHSTUDYCODE")
     private String speechStudyCode;
 

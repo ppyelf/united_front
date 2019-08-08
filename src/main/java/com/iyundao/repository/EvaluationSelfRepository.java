@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Repository
 public interface EvaluationSelfRepository extends BaseRepository<EvaluationSelf,String> {
-    @Query("select es from  EvaluationSelf es where es.lastModifiedDate= ?1")
+    @Query("select es from  EvaluationSelf es order by es.lastModifiedDate desc ")
     List<EvaluationSelf> findAllSelf();
 
     @Query(value = "SELECT * FROM t_evaluation_self WHERE EVALUATEUSERCODE \n" +

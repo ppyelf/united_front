@@ -390,7 +390,7 @@ public class EvaluationController extends BaseController{
      * @apiParam {int} page 查看的页数 默认1
      * @apiParam {int} size 每页的数量 默认10
      * @apiParamExample {json} 请求样例:
-     *               /evaluation/listPageOrganize?page=1&size=2
+     *               /evaluation/listPageSelf?page=1&size=2
      * @apiSuccess (200) {String} code 200:成功</br>
      * @apiSuccess (200) {String} message 信息
      * @apiSuccess (200) {String} data 返回用户信息

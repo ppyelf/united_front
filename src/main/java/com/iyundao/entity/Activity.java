@@ -110,6 +110,14 @@ public class Activity extends BaseEntity<String> {
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ActivityFrequency> activityFrequencies;
 
+    /**
+     * 地理位置
+     * @return
+     */
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<GeographicPosition> geographicPosition;
+
+
     public String getName() {
         return name;
     }
@@ -228,6 +236,14 @@ public class Activity extends BaseEntity<String> {
 
     public void setActivityFrequencies(Set<ActivityFrequency> activityFrequencies) {
         this.activityFrequencies = activityFrequencies;
+    }
+
+    public Set<GeographicPosition> getGeographicPosition() {
+        return geographicPosition;
+    }
+
+    public void setGeographicPosition(Set<GeographicPosition> geographicPosition) {
+        this.geographicPosition = geographicPosition;
     }
 
     public enum ACTIVITY_TYPE{

@@ -170,6 +170,18 @@ public class User extends BaseEntity<String> {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ActivityImage> activityImage;
 
+    /**
+     * 问卷调查人员记录
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<QuestionnaireUser> questionnaireUsers;
+
+
+    /**
+     * 问卷调查得分
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<QuestionnaireScore> questionnaireScore;
 
 
 
@@ -371,6 +383,22 @@ public class User extends BaseEntity<String> {
 
     public void setActivityImage(Set<ActivityImage> activityImage) {
         this.activityImage = activityImage;
+    }
+
+    public Set<QuestionnaireUser> getQuestionnaireUsers() {
+        return questionnaireUsers;
+    }
+
+    public void setQuestionnaireUsers(Set<QuestionnaireUser> questionnaireUsers) {
+        this.questionnaireUsers = questionnaireUsers;
+    }
+
+    public Set<QuestionnaireScore> getQuestionnaireScore() {
+        return questionnaireScore;
+    }
+
+    public void setQuestionnaireScore(Set<QuestionnaireScore> questionnaireScore) {
+        this.questionnaireScore = questionnaireScore;
     }
 
     /**

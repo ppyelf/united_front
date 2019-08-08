@@ -299,7 +299,7 @@ public class ActivityRecordController  extends BaseController{
      * @apiVersion 1.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 根据图片ids找删除图片
-     * @apiParam {String[]} frequencyIds 音频id
+     * @apiParam {String[]} imageIds 图片id
      * @apiParamExample {json} 请求样例:
      *                activityRecord/listPageFrequencyByActivityId?activityId=888888878
      * @apiSuccess (200) {String} code 200:成功</br>
