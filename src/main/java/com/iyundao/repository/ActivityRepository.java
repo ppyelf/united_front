@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: ActivityRepository
@@ -43,4 +44,13 @@ public interface ActivityRepository extends BaseRepository<Activity, String> {
      */
     @Query("select a from Activity a")
     Page<Activity> findAllForPage(Pageable pageable);
+
+
+    @Query(value = "select SUM(a.total/a.number) as score,s.userid as userId \n" +
+            "from t_activity a \n" +
+            "INNER JOIN t_sign s \n" +
+            "on a.id = s.activityid \n" +
+            "WHERE s.type = 0 and s.CREATEDATE  BETWEEN (?1) and (?2) \n" +
+            "GROUP BY userId ORDER BY score\n",nativeQuery = true)
+    List<Map<String,Object>> findAllByType(String startTime, String endTime);
 }

@@ -91,4 +91,11 @@ public interface QuestionnaireService {
      * @return
      */
     List<QuestionnaireScore> findScoreByUser(User user);
+
+    /**
+     * 根据类型判断排行的规矩，返回实体
+     * @param type
+     * @return
+     */
+    List<Map<String,Object>> findAllByType(int type);
 }

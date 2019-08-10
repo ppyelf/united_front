@@ -3,6 +3,7 @@ package com.iyundao.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.iyundao.base.utils.JsonUtils;
+import com.iyundao.base.utils.TimeUtils;
 import com.iyundao.entity.*;
 import com.iyundao.repository.*;
 import com.iyundao.service.QuestionnaireService;
@@ -162,9 +163,38 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
+    public List<Map<String,Object>> findAllByType(int type) {
+        String startTime = convertTime(type, true);
+        String endTime = convertTime(type, false);
+        List<Map<String,Object>>  map =questionnaireScoreRepository.findAllByType(startTime,endTime);
+        return map;
+    }
+
+    @Override
     public void delete(List<Questionnaire> questionnaire) {
             questionnaireRepository.deleteAll(questionnaire);
     }
 
 
+    private String convertTime(int type, boolean start) {
+        switch (type) {
+            case  0://今日
+                return start
+                        ? TimeUtils.convertTime(TimeUtils.getDayBegin(), TimeUtils.yyyyMMddHHmmss)
+                        : TimeUtils.convertTime(TimeUtils.getDayEnd(), TimeUtils.yyyyMMddHHmmss);
+            case  1://本周
+                return start
+                        ? TimeUtils.convertTime(TimeUtils.getBeginDayOfWeek(), TimeUtils.yyyyMMddHHmmss)
+                        : TimeUtils.convertTime(TimeUtils.getEndDayOfWeek(), TimeUtils.yyyyMMddHHmmss);
+            case  2://本月
+                return start
+                        ? TimeUtils.convertTime(TimeUtils.getBeginDayOfMonth(), TimeUtils.yyyyMMddHHmmss)
+                        : TimeUtils.convertTime(TimeUtils.getEndDayOfMonth(), TimeUtils.yyyyMMddHHmmss);
+            case  3://本年
+                return start
+                        ? TimeUtils.convertTime(TimeUtils.getBeginDayOfYear(), TimeUtils.yyyyMMddHHmmss)
+                        : TimeUtils.convertTime(TimeUtils.getEndDayOfYear(), TimeUtils.yyyyMMddHHmmss);
+        }
+        return "";
+    }
 }

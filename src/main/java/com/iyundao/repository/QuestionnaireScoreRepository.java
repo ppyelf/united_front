@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: QuestionnaireScoreRepository
@@ -25,4 +26,9 @@ public interface QuestionnaireScoreRepository extends BaseRepository<Questionnai
 
     @Query("select qs from  QuestionnaireScore qs where qs.user = ?1")
     List<QuestionnaireScore> findScoreByUser(User user);
+
+    @Query(value = "select u.name as userName,u.id as userId,sum(qs.score) as score from t_user u \n" +
+            "INNER JOIN t_questionnaire_score qs on u.id=qs.USERID \n" +
+            "WHERE qs.CREATEDATE BETWEEN ?1 AND ?2 GROUP BY u.name ORDER BY score",nativeQuery = true)
+    List<Map<String,Object>>  findAllByType(String startTime, String endTime);
 }

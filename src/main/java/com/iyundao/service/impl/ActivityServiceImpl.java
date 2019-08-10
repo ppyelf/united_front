@@ -6,6 +6,7 @@ import com.iyundao.base.Pageable;
 import com.iyundao.base.utils.FileUtils;
 import com.iyundao.base.utils.JsonResult;
 import com.iyundao.base.utils.JsonUtils;
+import com.iyundao.base.utils.TimeUtils;
 import com.iyundao.entity.*;
 import com.iyundao.repository.*;
 import com.iyundao.service.ActivityService;
@@ -362,6 +363,36 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void deleteText(List<ActivityText> at) {
         activityTextRepository.deleteAll(at);
+    }
+
+    @Override
+    public List<Map<String, Object>> findAllByType(int type) {
+        String startTime = convertTime(type, true);
+        String endTime = convertTime(type, false);
+        List<Map<String,Object>>  map = activityRepository.findAllByType(startTime,endTime);
+        return map;
+    }
+
+    private String convertTime(int type, boolean start) {
+        switch (type) {
+            case  0://今日
+                return start
+                        ? TimeUtils.convertTime(TimeUtils.getDayBegin(), TimeUtils.yyyyMMddHHmmss)
+                        : TimeUtils.convertTime(TimeUtils.getDayEnd(), TimeUtils.yyyyMMddHHmmss);
+            case  1://本周
+                return start
+                        ? TimeUtils.convertTime(TimeUtils.getBeginDayOfWeek(), TimeUtils.yyyyMMddHHmmss)
+                        : TimeUtils.convertTime(TimeUtils.getEndDayOfWeek(), TimeUtils.yyyyMMddHHmmss);
+            case  2://本月
+                return start
+                        ? TimeUtils.convertTime(TimeUtils.getBeginDayOfMonth(), TimeUtils.yyyyMMddHHmmss)
+                        : TimeUtils.convertTime(TimeUtils.getEndDayOfMonth(), TimeUtils.yyyyMMddHHmmss);
+            case  3://本年
+                return start
+                        ? TimeUtils.convertTime(TimeUtils.getBeginDayOfYear(), TimeUtils.yyyyMMddHHmmss)
+                        : TimeUtils.convertTime(TimeUtils.getEndDayOfYear(), TimeUtils.yyyyMMddHHmmss);
+        }
+        return "";
     }
 
 

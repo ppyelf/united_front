@@ -67,6 +67,12 @@ public class Subject extends BaseEntity<String> {
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ScoreDeption> scoreDeption;
 
+    /**
+     * 学习参与
+     */
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<LearnParticipation> learnParticipation;
+
 
 
     public enum SUBJECT_TYPE{
@@ -175,4 +181,11 @@ public class Subject extends BaseEntity<String> {
         this.scoreDeption = scoreDeption;
     }
 
+    public Set<LearnParticipation> getLearnParticipation() {
+        return learnParticipation;
+    }
+
+    public void setLearnParticipation(Set<LearnParticipation> learnParticipation) {
+        this.learnParticipation = learnParticipation;
+    }
 }

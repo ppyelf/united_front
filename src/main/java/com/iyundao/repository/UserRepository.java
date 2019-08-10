@@ -57,7 +57,7 @@ public interface UserRepository extends BaseRepository<User, String> {
      * @param groupId
      * @return
      */
-    @Query(value = "SELECT u.* from t_user u left join t_user_relations ur on ur.USERID = u.ID where ur.GROUPSID = (?1)", nativeQuery = true)
+    @Query(value = "SELECT u.* from t_user u left join t_user_relations ur on ur.USERID = u.ID where ur.GROUPID = (?1)", nativeQuery = true)
     List<User> findByGroupIdForPage(String groupId);
 
     /**

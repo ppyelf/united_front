@@ -177,13 +177,32 @@ public class User extends BaseEntity<String> {
     private Set<QuestionnaireUser> questionnaireUsers;
 
 
+
     /**
      * 问卷调查得分
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<QuestionnaireScore> questionnaireScore;
 
+    /**
+     * 用户功能
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<DoorFunction> doorFunctions;
 
+    /**
+     * 学习情况
+     * @return
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<LearnDetails> learnDetails;
+
+    /**
+     * 学习参与
+     * @return
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<LearnParticipation> learnParticipation;
 
     public String getAccount() {
         return account;
@@ -399,6 +418,30 @@ public class User extends BaseEntity<String> {
 
     public void setQuestionnaireScore(Set<QuestionnaireScore> questionnaireScore) {
         this.questionnaireScore = questionnaireScore;
+    }
+
+    public Set<DoorFunction> getDoorFunctions() {
+        return doorFunctions;
+    }
+
+    public void setDoorFunctions(Set<DoorFunction> doorFunctions) {
+        this.doorFunctions = doorFunctions;
+    }
+
+    public Set<LearnDetails> getLearnDetails() {
+        return learnDetails;
+    }
+
+    public void setLearnDetails(Set<LearnDetails> learnDetails) {
+        this.learnDetails = learnDetails;
+    }
+
+    public Set<LearnParticipation> getLearnParticipation() {
+        return learnParticipation;
+    }
+
+    public void setLearnParticipation(Set<LearnParticipation> learnParticipation) {
+        this.learnParticipation = learnParticipation;
     }
 
     /**

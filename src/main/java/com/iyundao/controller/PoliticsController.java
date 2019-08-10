@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * @ClassName: PoliticsController
- * @project:
+ * @project:  //todo 添加根据用户id查找用户所有参政议政的详情,还要从唐哥的userinfo里面查找他的参政议政详情介绍
  * @author: 13620
  * @Date: 2019/7/31
  * @Description: 参政议政

@@ -70,6 +70,13 @@ public class Depart extends BaseEntity<String> {
     @OneToMany(mappedBy = "depart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ScoreDeption> scoreDeption;
 
+    /**
+     * 学习参与
+     * @return
+     */
+    @OneToMany(mappedBy = "depart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<LearnParticipation> learnParticipation;
+
 
     public String getName() {
         return name;
@@ -135,5 +142,11 @@ public class Depart extends BaseEntity<String> {
         this.scoreDeption = scoreDeption;
     }
 
+    public Set<LearnParticipation> getLearnParticipation() {
+        return learnParticipation;
+    }
 
+    public void setLearnParticipation(Set<LearnParticipation> learnParticipation) {
+        this.learnParticipation = learnParticipation;
+    }
 }

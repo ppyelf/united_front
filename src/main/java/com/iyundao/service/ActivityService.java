@@ -8,6 +8,7 @@ import com.iyundao.entity.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName: ActivityService
@@ -258,4 +259,11 @@ public interface ActivityService {
      * @param at
      */
     void deleteText(List<ActivityText> at);
+
+    /**
+     *根据类型判断排行的规矩，返回实体
+     * @param type
+     * @return
+     */
+    List<Map<String,Object>> findAllByType(int type);
 }
