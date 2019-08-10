@@ -27,8 +27,8 @@ import java.util.List;
  * @Version: V1.0
  */
 @RestController
-@RequestMapping("/learn")
-public class LearnController extends BaseController {
+@RequestMapping("/training")
+public class TrainingController extends BaseController {
 
 
     @Autowired
@@ -48,8 +48,8 @@ public class LearnController extends BaseController {
 
 
     /**
-    * @api {POST}  /learn/addLearn  添加学习任务
-    * @apiGroup Learn
+    * @api {POST}  /training/addLearn  添加学习任务
+    * @apiGroup Training
     * @apiVersion 1.0.0
     * @apiHeader {String} IYunDao-AssessToken token验证
     * @apiDescription 添加学习任务
@@ -61,7 +61,7 @@ public class LearnController extends BaseController {
     * @apiParam {String[]} groups
     * @apiParam {String[]} users
     * @apiParamExample {json} 请求样例:
-    *                /learn/addLearn
+    *                /training/addLearn
     * @apiSuccess (200) {String} code 200:成功</br>
     * @apiSuccess (200) {String} message 信息
     * @apiSuccess (200) {String} data 返回用户信息
@@ -89,15 +89,15 @@ public class LearnController extends BaseController {
 
 
     /**
-     * @api {POST} /learn/listPageLearn  学习列表
-     * @apiGroup Learn
+     * @api {POST} /training/listPageLearn  学习列表
+     * @apiGroup Training
      * @apiVersion 1.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 学习列表
      * @apiParam {int} page 查看的页数 默认1
      * @apiParam {int} size 每页的数量 默认10
      * @apiParamExample {json} 请求样例:
-     *               /learn/listPageLearn?page=1&size=10
+     *               /training/listPageLearn?page=1&size=10
      * @apiSuccess (200) {String} code 200:成功</br>
      * @apiSuccess (200) {String} message 信息
      * @apiSuccess (200) {String} data 返回用户信息
@@ -125,14 +125,14 @@ public class LearnController extends BaseController {
 
 
     /**
-     * @api {POST} /learn/viewLearn  查看学习详情
-     * @apiGroup Learn
+     * @api {POST} /training/viewLearn  查看学习详情
+     * @apiGroup Training
      * @apiVersion 1.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 查看学习详情
      * @apiParam {String} learnId 学习任务
      * @apiParamExample {json} 请求样例:
-     *               /learn/viewLearn?learnId=4028d8816c78fded016c795059f30007
+     *               /training/viewLearn?learnId=4028d8816c78fded016c795059f30007
      * @apiSuccess (200) {String} code 200:成功</br>
      * @apiSuccess (200) {String} message 信息
      * @apiSuccess (200) {String} data 返回用户信息
@@ -156,14 +156,14 @@ public class LearnController extends BaseController {
 
 
     /**
-     * @api {POST} /learn/delLearn  删除学习详情
-     * @apiGroup Learn
+     * @api {POST} /training/delLearn  删除学习详情
+     * @apiGroup Training
      * @apiVersion 1.0.0
      * @apiHeader {String} IYunDao-AssessToken token验证
      * @apiDescription 删除学习详情
      * @apiParam {String} learnId 学习任务id
      * @apiParamExample {json} 请求样例:
-     *               /learn/delLearn?learnId=4028d8816c78fded016c795059f30007
+     *               /training/delLearn?learnId=4028d8816c78fded016c795059f30007
      * @apiSuccess (200) {String} code 200:成功</br>
      * @apiSuccess (200) {String} message 信息
      * @apiSuccess (200) {String} data 返回用户信息
